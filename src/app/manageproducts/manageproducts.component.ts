@@ -117,7 +117,7 @@ export class ManageproductsComponent implements OnInit {
     this._productsService.bulkUploadProducts(file.target.files.item(0)).subscribe(
       (data: any) => {
         if (data.status == "success") {
-
+          this.getProducts();
         }
         this.alerts.for = "bulkUpload";
         this.alerts.status = data.status;
@@ -125,31 +125,7 @@ export class ManageproductsComponent implements OnInit {
         this.bulkInProgress = false;
       }
     )
-
-    // this.bulkFileName = event.target.files[0].name;
-
-    // const formData = new FormData();
-    // formData.append('bulkfile', event, event.name);
-    // uploadedFile.append('file', new Blob([file], { type: 'text/csv' }), file.name);
-    // console.log(JSON.stringify(uploadedFile));
-
-    this.bulkInProgress = false;
-    // const url = `MyURL`;
-    // return this.http.post(url, uploadedFile);
   }
-
-  // uploadCSVFile(file: any) {
-  //   let formData: FormData = new FormData();
-  //   formData.append('bulkfile', file, file.name);
-  //   let headers = new Headers();
-  //   /** In Angular 5, including the header Content-Type can invalidate your request */
-  //   headers.append('Content-Type', 'multipart/form-data');
-  //   headers.append('Accept', 'application/json');
-  //   headers.append('enctype', 'multipart/form-data');
-
-  //   // let options = new RequestOptions({ headers: headers });
-  //   // return this.http.post(url, formData, options)
-  // }
 
   loadProducts() {
     this.inProgress = true;

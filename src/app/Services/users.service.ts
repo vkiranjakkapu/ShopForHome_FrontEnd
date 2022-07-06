@@ -24,12 +24,12 @@ export class UsersService {
   }
 
   createUser(data: any): Observable<User> {
-    data = {user: data, token: this._authService.getUserToken()}
+    data = {user: data, token: this._authService.getUserToken().token}
     return this.http.post<User>(`${this.url}/`, data);
   }
 
   updateUser(data: any): Observable<User> {
-    data = { user: data, token: this._authService.getUserToken() }
+    data = { user: data, token: this._authService.getUserToken().token }
     return this.http.put<User>(`${this.url}/`, data);
   }
 

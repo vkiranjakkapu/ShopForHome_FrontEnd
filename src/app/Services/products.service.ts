@@ -23,7 +23,7 @@ export class ProductsService {
   }
 
   createProduct(data: any): Observable<Product> {
-    data = {product: data, token: this._authService.getUserToken()}
+    data = {product: data, token: this._authService.getUserToken().token}
     return this.http.post<Product>(`${this.url}/`, data);
   }
 
@@ -39,7 +39,7 @@ export class ProductsService {
   }
 
   updateProduct(data: any): Observable<Product> {
-    data = { product: data, token: this._authService.getUserToken() }
+    data = { product: data, token: this._authService.getUserToken().token }
     return this.http.put<Product>(`${this.url}/`, data);
   }
 

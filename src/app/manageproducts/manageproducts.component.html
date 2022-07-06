@@ -102,33 +102,16 @@
                             {{ alerts.msg }}
                         </div>
 
-                        <!-- <div *ngIf="currentFile" class="progress">
-                            <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar"
-                                attr.aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100"
-                                [ngStyle]="{ width: progress + '%' }">
-                                {{ progress }}%
-                            </div>
-                        </div>
-                        <label class="btn btn-default">
-                            <input type="file" (change)="selectFile($event)" />
-                        </label>
-                        <button class="btn btn-success" [disabled]="!selectedFiles" (click)="upload()">
-                            Upload
-                        </button>
-                        <div class="alert alert-light" role="alert">{{ message }}</div> -->
-
                         <div class="form-group text-center">
                             <label for="bulkUpload" class="btn btn-primary bg-theme-secondary w-100"
-                                [ngClass]="{'disabled': bulkInProgress}"><i class="bi bi-file-csv"></i>Upload
-                                CSV</label>
+                                [ngClass]="{'disabled': bulkInProgress}"><i class="bi bi-file-csv"></i>
+                                <span *ngIf="!bulkInProgress">Upload CSV</span>
+                                <span *ngIf="bulkInProgress">Uploading...</span>
+                            </label>
                             <input type="file" name="bulkUpload" id="bulkUpload" class="form-control"
                                 style="display: none;"
                                 accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                 ngModel #bulkFile="ngModel"  (change)="bulkUpdate($event)">
-                        </div>
-                        <div class="text-end my-3">
-                            <button class="btn btn-success bg-theme-savesoil-primary"><i
-                                    class="bi bi-filetype-csv"></i>Upload</button>
                         </div>
                     </div>
                 </div>
@@ -241,7 +224,7 @@
                                     [ngClass]="{'is-invalid': prdbrandName.errors && prdbrandName.touched, 'is-valid': !prdbrandName.errors && prdbrandName.touched}"
                                     #prdbrandName="ngModel" ngModel required>
                                 <div *ngIf="prdbrandName.touched">
-                                    <p class="form-text text-danger" *ngIf="brandName.errors?.['required']">
+                                    <p class="form-text text-danger" *ngIf="prdbrandName.errors?.['required']">
                                         Brand Name is a required field!
                                     </p>
                                 </div>
