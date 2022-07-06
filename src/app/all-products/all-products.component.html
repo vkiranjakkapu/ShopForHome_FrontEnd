@@ -1,0 +1,55 @@
+<h1 class="text-center text-theme-primary">{{ thisPage }}</h1>
+<hr>
+<div class="container-fluid px-0">
+    <div class="row mx-2">
+        <div class="col-4 d-flex align-items-center">
+            <div class="d-flex justify-content-start align-items-center w-100">
+                <label for="perpage">Show : &nbsp;</label>
+                <select name="perpage" class="form-control form-select w-25" id="perpage" [(ngModel)]="perPage">
+                    <option *ngFor="let count of records" value="{{count}}">{{count}}</option>
+                </select>&nbsp; Products per page
+            </div>
+        </div>
+        <div class="col-4 d-flex align-items-center">
+            <div class="d-flex justify-content-center align-items-center w-100">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                    <input type="search" name="search" id="search" class="form-control border-start-0 ps-0" [(ngModel)]="search" (keyup)="searchProducts()" placeholder="Search Products Here">
+                </div>
+            </div>
+        </div>
+        <div class="col-4 d-flex align-items-center justify-content-end">
+            <div class="text-end">
+                <pagination-controls class="pagination" id="allProducts" [maxSize]="5" [autoHide]="true" [responsive]="true" previousLabel="" nextLabel="" (pageChange)="page = $event"></pagination-controls>
+            </div>
+        </div>
+    </div>
+    <hr>
+</div>
+<div class="container-fluid" [ngClass]="{'loading-effect': inProgress}" loading="Loading Products...">
+    <div class="alert alert-sm alert-info text-center mt-2" *ngIf="(productsList.length == 0)"><i class="bi bi-info-circle pe-2"></i>No Products in Database</div>
+    <div class="products-grid py-2" *ngIf="productsList.length > 0">
+        <div class="product" *ngFor="let prdct of productsList | paginate: { itemsPerPage: perPage, currentPage: page, id: 'allProducts' }" (click)="openProductDetails($event, prdct?.pid)">
+            <div class="product-header"><div class="img position-relative">
+                    <img src="{{ prdct?.image }}" alt="Dining Table" class="w-100">
+                    <div class="wishlist">
+                        <div class="btn-group btn-group-verticle ">
+                            <button class="btn"><i class="bi bi-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="product-body p-2">
+                <p>
+                    <span class="fw-bold text-theme-secondary price">&#8377; {{ prdct?.price }} <small class="text-secondary"><s>&nbsp;xxxxx&nbsp;</s></small></span><br>
+                    <small class="text-savesoil-primary fw-bold">50% Off</small><br>
+                    <span><small class="text-muted fw-bold">{{ prdct?.brandName }}</small></span><br>
+                    <span class="title">{{ prdct?.name }}</span>
+                </p>
+                <div class="text-center">
+                    <button class="btn btn-primary w-100 btn-sm bg-theme-secondary text-capitalize"><i class="bi bi-cart pe-2"></i>Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,109 @@
+<h2 class="text-center">Participants</h2>
+<hr>
+<div class="container-fluid px-0">
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#usersModal" (click)="updateModalstate('create')"><i class="bi bi-person-plus pe-2"></i>Add User</button>
+    <hr>
+    <div class="alert alert-info text-center" *ngIf="usersList.length == 0"><i class="bi bi-user pe-2"></i> No Users Found Other than You!</div>
+    <table class="table table-hover table-stripped" *ngIf="usersList.length > 0">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>User Name</th>
+                <th>Email</th>
+                <th>Edit</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let usr of usersList" class="">
+                <td><span class="d-flex my-auto">{{ usr?.uid }}</span></td>
+                <td><span class="d-flex my-auto">{{ usr?.name }}</span></td>
+                <td><span class="d-flex my-auto">{{ usr?.email }}</span></td>
+                <td>
+                    <span class="text-secondary" *ngIf="curUser?.uid == usr.uid">Master</span>
+                    <button *ngIf="curUser?.uid != usr.uid" class="btn btn-primary" (click)="setUserData('update', usr.uid)" data-bs-toggle="modal" data-bs-target="#usersModal"><i class="bi bi-pencil"></i></button>
+                </td>
+                <td>
+                    <span class="text-secondary" *ngIf="curUser?.uid == usr.uid">Master</span>
+                    <button *ngIf="curUser?.uid != usr.uid" class="btn btn-danger" (click)="deleteUser(usr.uid)"><i class="bi bi-trash"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="usersModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="loginModalLabel">{{ modalTitle }}</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form #usersModal="ngForm" (ngSubmit)="submitForm(usersModal.value)">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="form">
+                            <div class="alert alert-sm p-2 text-capitalize" [ngClass]="{'d-none': (alerts.status == 'none'), 'alert-success': (alerts.status == 'success'), 'alert-danger': (alerts.status == 'error')}" login-alert>
+                                <i class="bi bi-exclamation-circle-fill pe-2" *ngIf="(alerts.status == 'error')"></i>
+                                <i class="bi bi-check-circle-fill pe-2" *ngIf="(alerts.status == 'success')"></i>
+                                {{ alerts.msg }}
+                            </div>
+                            <div class="mb-3 form-group">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" name="name" id="name" [ngClass]="{'is-invalid': name.errors && name.touched, 'is-valid': !name.errors && name.touched}"
+                                     placeholder="Enter User Name"  #name="ngModel" ngModel required value="{{user?.name}}">
+                                <div *ngIf="name.touched">
+                                    <p class="form-text text-danger" *ngIf="name.errors?.['required']">
+                                        Name is a required field!
+                                    </p>
+                                    <p class="form-text text-danger" *ngIf="name.errors?.['pattern']">
+                                        This is not a valid Name!!!
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mb-3 form-group">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email" id="email" [ngClass]="{'is-invalid': email.errors && email.touched, 'is-valid': !email.errors && email.touched}"
+                                     placeholder="Enter Email Adddress"
+                                    pattern="[A-Za-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" #email="ngModel" ngModel
+                                    required value="{{user?.email}}">
+                                <div *ngIf="email.touched">
+                                    <p class="form-text text-danger" *ngIf="email.errors?.['required']">
+                                        Email is a required field!
+                                    </p>
+                                    <p class="form-text text-danger" *ngIf="email.errors?.['pattern']">
+                                        This is not a valid Email!!!
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mb-3 form-group">
+                                <label for="acctype" class="form-label">Account Type</label>
+                                <select name="acctype" class="form-select" id="acctype" [ngClass]="{'is-invalid': acctype.errors && acctype.touched, 'is-valid': !acctype.errors && acctype.touched}" #acctype="ngModel" ngModel required value="{{user?.acctype}}">
+                                    <option value="user">User</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                                <div *ngIf="acctype.touched">
+                                    <p class="form-text text-danger" *ngIf="acctype.errors?.['required']">
+                                        Account Type is a required field!
+                                    </p>
+                                    <p class="form-text text-danger" *ngIf="acctype.errors?.['pattern']">
+                                        This is not a valid Account Type!!!
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary btn-sm" [ngClass]="{'disbaled': (isProgress || name.errors?.['required'] || email.errors?.['required'] || email.errors?.['pattern'] || acctype.errors?.['required']) && btnDisable}" login-btn>
+                                <span class="d-flex align-items-center ">
+                                    <span class="spinner spinner-grow spinner-grow-sm"
+                                        [class]="isProgress ? 'd-block' : 'd-none'"></span>
+                                    <i class="bi bi-shield-check" [class]="isProgress ? 'd-none' : 'd-block'"></i>
+                                    <span class="ps-2">Submit</span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

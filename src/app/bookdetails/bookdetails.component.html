@@ -1,0 +1,27 @@
+<div class="container-fluid">
+    <div class="row bookDetails mx-auto w-75">
+        <div class="col-12">
+            <h1 class="text-center text-theme-secondary">Details of '{{ book?.getTitle() }}' Book</h1>
+            <hr>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xsm-12 ">
+            <div class="img mx-auto p-2 border text-center mb-2">
+                <img src="assets/{{ book?.getImageLink() }}" alt="{{ book?.getTitle() }}" class="img-fluid">
+            </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xsm-12">
+            <div class="d-flex flex-column justify-content-start">
+                <div class="text-theme-primary d-flex align-items-center justify-content-start">
+                    <h2 class="me-2">{{ book?.getTitle() }}</h2>
+                    <h5>({{ book?.getYear() }})</h5>
+                </div>
+                <hr class="w-75 mt-0">
+                <div class="d-flex"><h4 class="me-2">Author: </h4>{{ book?.getAuthor() }}</div>
+                <div class="d-flex"><h4 class="me-2">Language: </h4>{{ book?.getLanguage() }}</div>
+                <div class="d-flex"><h4 class="me-2">Pages: </h4>{{ book?.getPages() }}</div>
+                <div class="d-flex"><h4 class="me-2">Country: </h4>{{ book?.getCountry() }}</div>
+                <div class="d-flex"><h4 class="me-2">Know more: <a href="{{ book?.getLink() }}" target="_blank">Here</a></h4></div>
+            </div>
+        </div>
+    </div>
+</div>

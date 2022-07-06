@@ -1,0 +1,53 @@
+<!-- <h1 class="text-center text-theme-primary">{{ thisPage }}</h1>
+<hr>
+<div class="container-fluid px-0">
+    <div class="row mx-2">
+        <div class="col-6 d-flex align-items-center">
+            <div class="d-flex justify-content-start align-items-center w-100">
+                <label for="perpage">Show : &nbsp;</label>
+                <select name="perpage" class="form-control form-select w-25" id="perpage" [(ngModel)]="perPage">
+                    <option *ngFor="let count of records" value="{{count}}">{{count}}</option>
+                </select>&nbsp; Books per page
+            </div>
+        </div>
+        <div class="col-6 d-flex align-items-center justify-content-end">
+            <div class="text-end">
+                <pagination-controls class="pagination" id="allbooks" [maxSize]="5" [autoHide]="true" [responsive]="true" previousLabel="" nextLabel="" (pageChange)="page = $event"></pagination-controls>
+            </div>
+        </div>
+    </div>
+    <hr>
+</div>
+<div class="container-fluid">
+    <div class="alert alert-info text-center" *ngIf="(books.length) == 0"><i class="bi bi-info-circle pe-2"></i>Book Store Empty!</div>
+    <div class="books-grid">
+        <div *ngFor="let book of books | paginate: { itemsPerPage: perPage, currentPage: page, id: 'allbooks' }">
+            <div class="book" (click)="openBookDetails(book.getId(), $event)">
+                <div class="d-flex align-items-center">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="position-relative">
+                                <img src="assets/{{ book.getImageLink() }}" alt="{{ book.getTitle() }}" class="img-fluid w-100">
+                                <div class="wishlist btn-group btn-group-vertical d-flex align-items-center justify-content-center" *ngIf="isLoggedIn">
+                                    <button class="btn btn-sm d-flex align-items-center justify-content-center" (click)="modifyWishlist(book.getId())" modifyWishlist>
+                                        <i title="Add to Wishlist" class="bi bi-heart" [ngClass]="{'d-none' : inWishlist(book.getId())}"></i>
+                                        <i title="Remove from Wishlist" class="bi bi-heart-fill" [ngClass]="{'d-none' : !inWishlist(book.getId())}"></i>
+                                    </button>
+                                    <button class="btn btn-sm d-flex align-items-center justify-content-center" (click)="modifyCompleted(book.getId())" modifyCompleted>
+                                        <i title="Add to Completed" class="bi bi-book-half" [ngClass]="{'d-none' : inCompleted(book.getId())}"></i>
+                                        <i title="Remove from Completed" class="bi bi-book-fill" [ngClass]="{'d-none' : !inCompleted(book.getId())}"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="m-2 text-center">
+                                <h3>{{ book.getTitle() }} (<small>{{ book.getYear() }}</small>)</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->

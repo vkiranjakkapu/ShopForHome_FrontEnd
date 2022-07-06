@@ -1,0 +1,173 @@
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="loginModalLabel">Login</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form #loginForm="ngForm" (ngSubmit)="LoginUser(loginForm.value)">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <p>
+                            Use the below default credentials to login into the application or register to create account.
+                        </p>
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" colspan="4">Default Credentials for Ref.</th>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>Password</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>deepak@gmail.com</td>
+                                    <td>dep@123!</td>
+                                </tr>
+                                <tr>
+                                    <td>venkatakiranj@gmail.com</td>
+                                    <td>sainath</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <hr>
+                        <div class="form">
+                            <div class="alert alert-sm p-2 text-capitalize" [ngClass]="{'d-none': (alerts.status == 'none'), 'alert-success': (alerts.status == 'success'), 'alert-danger': (alerts.status == 'error')}" *ngIf="alerts.for == 'auth'" login-alert>
+                                <i class="bi bi-exclamation-circle-fill pe-2" *ngIf="(alerts.status == 'error')"></i>
+                                <i class="bi bi-check-circle-fill pe-2" *ngIf="(alerts.status == 'success')"></i>
+                                {{ alerts.msg }}
+                            </div>
+                            <div class="mb-3 form-group">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email" id="email" [ngClass]="{'is-invalid': email.errors && email.touched, 'is-valid': !email.errors && email.touched}"
+                                    value="Deepak@gmail.com" placeholder="Enter Email Adddress"
+                                    pattern="[A-Za-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" #email="ngModel" ngModel
+                                    required>
+                                <div *ngIf="email.touched">
+                                    <p class="form-text text-danger" *ngIf="email.errors?.required">
+                                        Email is a required field!
+                                    </p>
+                                    <p class="form-text text-danger" *ngIf="email.errors?.pattern">
+                                        This is not a valid Email!!!
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mb-3 form-group">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" name="password" id="password" [ngClass]="{'is-invalid': pass.errors && pass.touched, 'is-valid': !pass.errors && pass.touched}"
+                                    value="dep@123!" placeholder="Enter Password" #pass="ngModel" ngModel required>
+                                <div class="form-text text-danger"
+                                    *ngIf="(pass.touched || loginForm.submitted) && pass.errors?.required">
+                                    Password is a required field!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary btn-sm"
+                                [disabled]="(isProgress || (email.errors?.required) || email.errors?.pattern || (pass.errors?.required))" login-btn>
+                                <span class="d-flex align-items-center ">
+                                    <span class="spinner spinner-grow spinner-grow-sm"
+                                        [class]="isProgress ? 'd-block' : 'd-none'"></span>
+                                    <i class="bi bi-shield-check" [class]="isProgress ? 'd-none' : 'd-block'"></i>
+                                    <span class="ps-2">Login</span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Registration Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="registerModalLabel">Register Yourself</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form [formGroup]="registerForm" (ngSubmit)="Register(registerForm.value)">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div reg-alert class="alert alert-sm p-2 text-capitalize" [ngClass]="{'d-none': (alerts.status == 'none'), 'alert-success': (alerts.status == 'success'), 'alert-danger': (alerts.status == 'error')}" *ngIf="alerts.for == 'reg'">
+                            <i class="bi bi-exclamation-circle-fill pe-2" *ngIf="(alerts.status == 'error')"></i>
+                            <i class="bi bi-check-circle-fill pe-2" *ngIf="(alerts.status == 'success')"></i>
+                            {{ alerts.msg }}
+                        </div>
+                        <div class="form">
+                            <div class="mb-3 form-group">
+                                <label for="uname" class="form-label">User Name</label>
+                                <input type="text" class="form-control" name="uname" id="uname" formControlName="uname" [ngClass]="{'is-invalid': registerForm.controls.uname.errors && registerForm.controls.uname.touched, 'is-valid': !registerForm.controls.uname.errors && registerForm.controls.uname.touched}"
+                                    placeholder="Enter UserName" required>
+                                <div class="form-text text-danger"
+                                    *ngIf="(registerForm.controls.uname.touched || registerForm.controls.submitted) && registerForm.controls.uname.errors?.required">
+                                    User name is a required field!
+                                </div>
+                            </div>
+                            <div class="mb-3 form-group">
+                                <label for="regEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" name="remail" id="regEmail" formControlName="regEmail" [ngClass]="{'is-invalid': registerForm.controls.regEmail.errors && registerForm.controls.regEmail.touched, 'is-valid': !registerForm.controls.regEmail.errors && registerForm.controls.regEmail.touched}"
+                                    placeholder="Enter Email Adddress" required>
+                                <div *ngIf="registerForm.controls.regEmail.touched">
+                                    <p class="form-text text-danger" *ngIf="registerForm.controls.regEmail.errors?.required">
+                                        Email is a required field!
+                                    </p>
+                                    <p class="form-text text-danger" *ngIf="registerForm.controls.regEmail.errors?.pattern">
+                                        This is not a valid Email!!!
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mb-3 form-group">
+                                <label for="phone" class="form-label">Phone</label>
+                                <input type="text" class="form-control" name="phone" id="phone" formControlName="phone" [ngClass]="{'is-invalid': registerForm.controls.phone.errors && registerForm.controls.phone.touched, 'is-valid': !registerForm.controls.phone.errors && registerForm.controls.phone.touched}"
+                                    placeholder="Enter Phone Number" required>
+                                <div class="form-text text-danger" *ngIf="registerForm.controls.phone.touched">
+                                    <p class="form-text text-danger" *ngIf="registerForm.controls.phone.errors?.required">
+                                        Phone is a required field!
+                                    </p>
+                                    <p class="form-text text-danger" *ngIf="registerForm.controls.phone.errors?.pattern">
+                                        This is not a valid Phone Number!!!
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mb-3 form-group">
+                                <label for="npass" class="form-label">New Password</label>
+                                <input type="password" class="form-control" name="npass" id="npass" formControlName="npass" [ngClass]="{'is-invalid': registerForm.controls.npass.errors && registerForm.controls.npass.touched, 'is-valid': !registerForm.controls.npass.errors && registerForm.controls.npass.touched}"
+                                    placeholder="Enter New Password" required>
+                                <div class="form-text text-danger"
+                                    *ngIf="(registerForm.controls.npass.touched || registerForm.controls.submitted) && registerForm.controls.npass.errors?.required">
+                                    Password is a required field!
+                                </div>
+                            </div>
+                            <div class="mb-3 form-group">
+                                <label for="cpass" class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control" name="cpass" id="cpass" formControlName="cpass" [ngClass]="{'is-invalid': registerForm.controls.cpass.errors && registerForm.controls.cpass.touched, 'is-valid': !registerForm.controls.cpass.errors && registerForm.controls.cpass.touched}"
+                                    placeholder="Confirm Password" required>
+                                <div class="form-text text-danger"
+                                    *ngIf="(registerForm.controls.cpass.touched || registerForm.controls.submitted) && registerForm.controls.cpass.errors?.required">
+                                    Confirm Password is a required field!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary btn-sm" reg-button
+                                [disabled]="( registerForm.controls.uname.errors?.required || registerForm.controls.regEmail.errors?.required || registerForm.controls.regEmail.errors?.pattern || registerForm.controls.phone.errors?.required || registerForm.controls.npass.errors?.required || registerForm.controls.cpass.errors?.required )">
+                                <span class="d-flex align-items-center ">
+                                    <span class="spinner spinner-grow spinner-grow-sm"
+                                        [class]="isProgress ? 'd-block' : 'd-none'"></span>
+                                    <i class="bi bi-shield-check" [class]="isProgress ? 'd-none' : 'd-block'"></i>
+                                    <span class="ps-2">Register</span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

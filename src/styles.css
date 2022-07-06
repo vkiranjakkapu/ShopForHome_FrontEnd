@@ -1,0 +1,288 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css");
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+:root
+{
+    --theme-primary: #0E39A9;
+    --theme-secondary: #1974D2;
+
+    --save-soil-primary: #7EB549;
+    --save-soil-secondary: #0D059E;
+    
+    --light: #ffffff;
+}
+
+.text-theme-primary
+{
+    color: #0E39A9;
+}
+
+.text-theme-secondary
+{
+    color: #1974D2;
+}
+
+.bg-theme-secondary
+{
+    background: #1974D2;
+}
+
+.border-radius-custom {
+    border-radius: 2em;
+}
+
+.nav-main,
+.w-90
+{
+    width: 90%;
+}
+
+.breadcrumb-item > a,
+.breadcrumb-item
+{
+    color: var(--theme-secondary);
+    text-decoration: none;
+}
+
+.breadcrumb-item > a:hover,
+.breadcrumb-item:hover
+{
+    color: var(--theme-primary);
+}
+
+.navbar-brand
+{
+    font-family: 'Poppins';
+}
+
+.navbar .nav-link
+{
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+}
+
+.navbar .nav-link.active
+{
+    color: var(--theme-primary) !important;
+}
+
+.navbar .nav-link:not(.active):hover
+{
+    color: var(--theme-secondary);
+}
+
+.rounded-ellipse
+{
+    border-radius: 100vw;
+}
+
+.cursor-pointer
+{
+    cursor: pointer;
+}
+
+/* Products Grid */
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2px;
+}
+
+.product {
+    padding: .25em;
+    min-height: 300px;
+    cursor: pointer;
+    border: 1px solid #eee;
+    background: var(--light);
+    transition: .3s ease-out;
+}
+
+.product:hover
+{
+    background: #f0f0f0;
+    background: #fff;
+}
+
+.product-body button
+{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+}
+
+.product-body .price
+{
+    font-size: 1.25em;
+    font-weight: bold;
+}
+
+.product-body .brand
+{
+    font-family: 'Manrope', sans-serif;
+    font-weight: thin;
+}
+
+.product .img {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    transition: .3s ease-out;
+}
+
+.product .img::after {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.1);
+    opacity: 1;
+    pointer-events: none;
+    z-index: 1;
+    transition: .3s ease-out;
+}
+
+.product:hover .img::after,
+.product .img:hover::after {
+    opacity: 0;
+}
+
+.product img {
+    max-height: 200px;
+    object-fit: scale-down;
+    object-position: center;
+    margin-top: auto;
+    margin-bottom: auto;
+    transition: .3s ease-out;
+    transform: translateY(0) scale(1);
+}
+
+.product:hover img {
+    transform: translateY(-10px) scale(1.1);
+}
+
+/* Wishlist */
+
+.wishlist {
+    position: absolute;
+    content: '';
+    right: 0;
+    top: 1em;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: .5em;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: .3s ease;
+}
+
+.product:hover .wishlist {
+    opacity: 1;
+    pointer-events: all;
+    right: 1em;
+}
+
+.wishlist:hover
+{
+    background: var(--theme-secondary);
+}
+
+.wishlist .bi
+{
+    pointer-events: none;
+    font-size: 1em;
+    color: #fff;
+}
+
+.wishlist:hover .bi
+{
+    color: #fff;
+}
+
+.wishlist .btn:hover
+{
+    background: #fff;
+}
+
+.wishlist:hover .btn:hover .bi
+{
+    color: #fe351b;
+}
+
+/* Pagination */
+
+.pagination .ngx-pagination a
+{
+    text-decoration: none;
+}
+
+.pagination .ngx-pagination .current
+{
+    background: var(--theme-secondary) !important;
+}
+
+.productDetails .img
+{
+    width: 75%;
+}
+
+.loading-effect
+{
+    position: relative;
+    min-height: 50vh;
+}
+
+.loading-effect * {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-effect::after,
+.loading-effect::before {
+    position: absolute;
+    content: '';
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.loading-effect::after {
+    color: var(--theme-primary);
+    font-weight: bold;
+    font-size: 2em;
+    content: attr(loading);
+    width: 50%;
+    height: 50%;
+    background: #fff;
+    opacity: 0.5;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+}
+
+.loading-effect::before {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    opacity: 0.5;
+    z-index: 0;
+}
+
+@media only screen and (max-width: 700px)  {
+    .nav-main,
+    .w-90
+    {
+        width: 100%;
+    }
+
+    .product .wishlist {
+        opacity: 1;
+        pointer-events: all;
+        right: 1em;
+    }
+}
