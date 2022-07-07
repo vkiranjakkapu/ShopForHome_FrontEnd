@@ -158,11 +158,13 @@ export class ManageproductsComponent implements OnInit {
   createProduct(data: any) {
     this.inProgress = true;
     this.alerts.for = "create";
-
     this.product = new Product(this.productsList.length + 1, data.prdname, data.prdimage, data.prdprice, data.prdstock, data.prdcategory, data.prdbrandName);
+    console.log(this.product);
 
     this._productsService.createProduct(this.product).subscribe(
       (data: any) => {
+        console.log(data);
+        
         if (data.status == "success") {
           this.product = data.product;
           this.getProducts();
@@ -213,12 +215,14 @@ export class ManageproductsComponent implements OnInit {
     this.inProgress = true;
     this.alerts.for = "update";
 
+    console.log(data);
+    
     this.product = new Product(this.product?.pid, data?.name, data?.image, data?.price, data?.stock, data?.category, data?.brandName);
 
     this._productsService.updateProduct(this.product).subscribe(
       (data: any) => {
         if (data.status == "success") {
-          this.productsList = data.products;
+          this.getProducts();
           alert(data.msg);
         }
       },

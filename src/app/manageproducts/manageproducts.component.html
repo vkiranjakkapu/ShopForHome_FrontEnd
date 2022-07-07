@@ -43,7 +43,7 @@
     <hr>
 </div>
 <div class="container-fluid" [ngClass]="{'loading-effect': inProgress}" loading="Loading Products...">
-    <div class="alert alert-sm alert-info text-center mt-2" *ngIf="(productsList.length == 0)"><i
+    <div class="alert alert-sm alert-info text-center mt-2" *ngIf="(productsList?.length == 0) && !inProgress"><i
             class="bi bi-info-circle pe-2"></i>No Products in Database</div>
     <div class="products-grid py-2" *ngIf="productsList.length > 0">
         <div class="product"
