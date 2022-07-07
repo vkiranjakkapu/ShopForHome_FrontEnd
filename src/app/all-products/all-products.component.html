@@ -33,13 +33,13 @@
             <div class="product-header"><div class="img position-relative">
                     <img src="{{ prdct?.image }}" alt="Dining Table" class="w-100">
                     <div class="wishlist btn-group btn-group-vertical d-flex align-items-center justify-content-center" *ngIf="isLoggedIn">
-                        <button class="btn btn-sm d-flex align-items-center justify-content-center" (click)="modifyWishlist(prdct.getId())">
-                            <i title="Add to Wishlist" class="bi bi-heart" [ngClass]="{'d-none' : inWishlist(prdct.getId())}"></i>
-                            <i title="Remove from Wishlist" class="bi bi-heart-fill" [ngClass]="{'d-none' : !inWishlist(prdct.getId())}"></i>
+                        <button class="btn btn-sm d-flex align-items-center justify-content-center" (click)="modifyWishlist(prdct?.pid)">
+                            <i title="Add to Wishlist" class="bi bi-heart" [ngClass]="{'d-none' : inWishlist(prdct?.pid)}"></i>
+                            <i title="Remove from Wishlist" class="bi bi-heart-fill" [ngClass]="{'d-none' : !inWishlist(prdct?.pid)}"></i>
                         </button>
-                        <button class="btn btn-sm d-flex align-items-center justify-content-center" (click)="modifyCart(prdct.getId())">
-                            <i title="Add to Completed" class="bi bi-book-half" [ngClass]="{'d-none' : inCart(prdct.getId())}"></i>
-                            <i title="Remove from Completed" class="bi bi-book-fill" [ngClass]="{'d-none' : !inCart(prdct.getId())}"></i>
+                        <button class="btn btn-sm d-flex align-items-center justify-content-center" (click)="modifyCart(prdct?.pid)">
+                            <i title="Add to Completed" class="bi bi-book-half" [ngClass]="{'d-none' : inCart(prdct?.pid)}"></i>
+                            <i title="Remove from Completed" class="bi bi-book-fill" [ngClass]="{'d-none' : !inCart(prdct?.pid)}"></i>
                         </button>
                     </div>
                 </div>
