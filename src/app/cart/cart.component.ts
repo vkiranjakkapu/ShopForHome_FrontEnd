@@ -12,7 +12,7 @@ import { ProductsService } from '../Services/products.service';
 })
 export class CartComponent implements OnInit {
 
-  public thisPage: string = "Store Books";
+  public thisPage: string = "Your Cart";
   public records: number[] = [8, 12, 16, 20, 24];
   public perPage: number = this.records[0];
   public page = 1;
@@ -30,8 +30,13 @@ export class CartComponent implements OnInit {
   ngOnInit(): void {
     this.fetchProducts();
     this._activeRouter.params.subscribe((pages: any) => { this.getPathVariables(pages) });
+    this._authService.localAuthnticate(this._authService.getUserToken()).then(
+      (data: any) => {
+        this.cart = data.cart.products
+      }
+    )
     if (!this._authService.isLoggedIn()) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/dashboard']);
     }
     this.isLoggedIn = this._authService.isLoggedIn();
   }

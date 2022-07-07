@@ -1,53 +1,58 @@
 <h1 class="text-center text-theme-primary">{{ thisPage }}</h1>
 <hr>
-<div class="container-fluid px-0">
+<div class="container-fluid px-0" *ngIf="(wishlist.length > 0)">
     <div class="row mx-2">
-        <div class="col-6 d-flex align-items-center">
+        <div class="col-4 d-flex align-items-center">
             <div class="d-flex justify-content-start align-items-center w-100">
                 <label for="perpage">Show : &nbsp;</label>
-                <select name="perpage" class="form-control w-25" id="perpage" [(ngModel)]="perPage">
+                <select name="perpage" class="form-control form-select w-25" id="perpage" [(ngModel)]="perPage">
                     <option *ngFor="let count of records" value="{{count}}">{{count}}</option>
-                </select>&nbsp; Books per page
+                </select>&nbsp; Products per page
             </div>
         </div>
-        <div class="col-6 d-flex align-items-center justify-content-end">
+        <div class="col-4 d-flex align-items-center">
+            <!-- <div class="d-flex justify-content-center align-items-center w-100">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                    <input type="search" name="search" id="search" class="form-control border-start-0 ps-0" [(ngModel)]="search" (keyup)="searchProducts()" placeholder="Search Products Here">
+                </div>
+            </div> -->
+        </div>
+        <div class="col-4 d-flex align-items-center justify-content-end">
             <div class="text-end">
-                <pagination-controls class="pagination" id="wishlist" [maxSize]="3" [autoHide]="true" [responsive]="true" previousLabel="" nextLabel="" (pageChange)="page = $event"></pagination-controls>
+                <pagination-controls class="pagination" id="allProducts" [maxSize]="5" [autoHide]="true" [responsive]="true" previousLabel="" nextLabel="" (pageChange)="page = $event"></pagination-controls>
             </div>
         </div>
     </div>
     <hr>
 </div>
-<div class="container-fluid">
-    <div class="alert alert-info text-center" *ngIf="(wishList.length) == 0"><i class="bi bi-info-circle pe-2"></i>No Books Under Wishlist</div>
-    <!-- <div class="books-grid">
-        <div *ngFor="let book of wishList | paginate: { itemsPerPage: perPage, currentPage: page, id: 'wishlist' }">
-            <div class="book" (click)="openBookDetails(book.getId(), $event)">
-                <div class="d-flex align-items-center">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="position-relative">
-                                <img src="assets/{{ book.getImageLink() }}" alt="{{ book.getTitle() }}" class="img-fluid w-100">
-                                <div class="wishlist btn-group btn-group-vertical d-flex align-items-center justify-content-center" *ngIf="isLoggedIn">
-                                    <button class="btn btn-sm d-flex align-items-center justify-content-center" (click)="modifyWishlist(book.getId())" modifyWishlist>
-                                        <i title="Add to Wishlist" class="bi bi-heart" [ngClass]="{'d-none' : inWishlist(book.getId())}"></i>
-                                        <i title="Remove from Wishlist" class="bi bi-heart-fill" [ngClass]="{'d-none' : !inWishlist(book.getId())}"></i>
-                                    </button>
-                                    <button class="btn btn-sm d-flex align-items-center justify-content-center" (click)="modifyCompleted(book.getId())" modifyCompleted>
-                                        <i title="Add to Completed" class="bi bi-book-half" [ngClass]="{'d-none' : inCompleted(book.getId())}"></i>
-                                        <i title="Remove from Completed" class="bi bi-book-fill" [ngClass]="{'d-none' : !inCompleted(book.getId())}"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="m-2 text-center">
-                                <h3>{{ book.getTitle() }} (<small>{{ book.getYear() }}</small>)</h3>
-                            </div>
+<div class="container-fluid" [ngClass]="{'loading-effect': inProgress}" loading="Loading Products...">
+    <div class="alert alert-sm alert-info text-center mt-2" *ngIf="(wishlist.length == 0)">
+        <i class="bi bi-info-circle pe-2"></i>
+        No Products in Cart. <a href="/dashboard/products">Explore Products</a>
+    </div>
+    <div class="products-grid py-2" *ngIf="wishlist.length > 0">
+        <div class="product" *ngFor="let prdct of wishlist | paginate: { itemsPerPage: perPage, currentPage: page, id: 'allProducts' }" (click)="openProductDetails($event, prdct?.pid)">
+            <div class="product-header"><div class="img position-relative">
+                    <img src="{{ prdct?.image }}" alt="Dining Table" class="w-100">
+                    <div class="wishlist">
+                        <div class="btn-group btn-group-verticle ">
+                            <button class="btn"><i class="bi bi-heart"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="product-body p-2">
+                <p>
+                    <span class="fw-bold text-theme-secondary price">&#8377; {{ prdct?.price }} <small class="text-secondary"><s>&nbsp;xxxxx&nbsp;</s></small></span><br>
+                    <small class="text-savesoil-primary fw-bold">50% Off</small><br>
+                    <span><small class="text-muted fw-bold">{{ prdct?.brandName }}</small></span><br>
+                    <span class="title">{{ prdct?.name }}</span>
+                </p>
+                <div class="text-center">
+                    <button class="btn btn-primary w-100 btn-sm bg-theme-secondary text-capitalize"><i class="bi bi-cart pe-2"></i>Add to Cart</button>
+                </div>
+            </div>
         </div>
-    </div> -->
+    </div>
 </div>

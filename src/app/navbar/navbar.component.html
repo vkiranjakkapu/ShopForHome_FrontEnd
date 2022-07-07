@@ -25,14 +25,15 @@
           <li class="nav-item" *ngIf="user?.acctype == 'user'">
             <a class="nav-link d-flex justify-content-center align-items-center" aria-current="page"
               routerLinkActive="active" routerLink="dashboard/cart">
-              <i class="bi bi-cart-fill"></i><span class="ms-2 badge bg-primary">{{ cart?.length }}</span>
+              <i class="bi bi-cart-fill me-2"></i>Cart
+              <span class="ms-2 badge bg-primary">{{ cart?.length }}</span>
             </a>
           </li>
           <li class="nav-item" *ngIf="user?.acctype == 'user'">
             <a class="nav-link d-flex justify-content-center align-items-center position-relative" aria-current="page"
               routerLinkActive="active" routerLink="dashboard/wishlist">
-              <i class="bi bi-heart-fill pe-2"></i>
-              <span class="badge bg-primary">{{ wishlist?.length }}</span>
+              <i class="bi bi-heart-fill me-2"></i>Wishlist
+              <span class="badge bg-primary ms-2">{{ wishlist?.length }}</span>
             </a>
           </li>
           <li>

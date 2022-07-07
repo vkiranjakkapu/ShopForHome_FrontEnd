@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Product } from '../Entities/product.model';
 import { AuthenticationsService } from '../Services/authentications.service';
 import { BookService } from '../Services/books.service';
+import { ProductsService } from '../Services/products.service';
+import { WishlistService } from '../Services/wishlist.service';
 
 @Component({
   selector: 'app-wishlist',
@@ -11,56 +14,76 @@ import { BookService } from '../Services/books.service';
 export class WishlistComponent implements OnInit {
 
   public thisPage: string = "Your Wishlist";
-  public page: number = 1;
-  public records: number[] = [6, 12, 18, 24, 30, 36];
-  public perPage: number = this.records[1];
-  public wishList: any;
+  public records: number[] = [8, 12, 16, 20, 24];
+  public perPage: number = this.records[0];
+  public page = 1;
+
   public isLoggedIn: boolean = false;
-  
-  constructor(private _authService: AuthenticationsService, private _bookService: BookService, private router: Router, private _activeRouter: ActivatedRoute) {
-    // _activeRouter.params.subscribe((pages: any) => { this.getPathVariables(pages) });
+  public inProgress = false;
+  public wishlist: Product[] = [];
+  public search: string = "";
+
+  constructor(private _authService: AuthenticationsService, private _wishlistService: WishlistService, private _productsService: ProductsService, private router: Router, private _activeRouter: ActivatedRoute) {
+    this.fetchProducts();
+    _activeRouter.params.subscribe((pages: any) => { this.getPathVariables(pages) });
   }
 
   ngOnInit(): void {
+    this.fetchProducts();
+    this._activeRouter.params.subscribe((pages: any) => { this.getPathVariables(pages) });
+    this._authService.localAuthnticate(this._authService.getUserToken()).then(
+      (data: any) => {
+        this.wishlist = data.wishlist.products
+      }
+    )
     if (!this._authService.isLoggedIn()) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/dashboard']);
     }
-    // this._activeRouter.params.subscribe((pages: any) => { this.getPathVariables(pages) });
-    // this.wishList = this._authService.getCurrentUser()?.getWishList()?.map((bid)=>{return this._bookService.getBookById(bid)});
     this.isLoggedIn = this._authService.isLoggedIn();
   }
 
-  // getPathVariables(pathVars: any) {    
-  //   if (pathVars.pageId != undefined) {
-  //     this.page = pathVars.pageId;
-  //   }
-  // }
+  fetchProducts() {
+    this._wishlistService.getProducts().subscribe(
+      (data: any) => {
+        if (data.status == "success") {
+          this.wishlist = data.products;
+        }
+      }
+    );
+  }
 
-  // inWishlist(id: any): boolean {
-  //   return this._bookService.inWishlist(id);
-  // }
+  selectPage(page: string) {
+    this.page = parseInt(page, 10) || 1;
+  }
 
-  // modifyWishlist(id: any) {
-  //   this._bookService.modifyWishlist(id);
-  //   this.wishList = this._authService.getCurrentUser()?.getWishList()?.map((bid)=>{return this._bookService.getBookById(bid)});
-  // }
+  getPathVariables(pathVars: any) {
+    if (pathVars.pageId != undefined) {
+      this.page = pathVars.pageId;
+    }
+  }
 
-  // modifyCompleted(id: any) {
-  //   this._bookService.modifyCompleted(id);
-  // }
-
-  // inCompleted(id: any): boolean {
-  //   return this._bookService.inCompleted(id);
-  // }
-
-  // openBookDetails(bid: any, e: any) {
-  //   if (e.target.nodeName != 'BUTTON') {
-  //     if (this.isLoggedIn) {
-  //       this.router.navigate(['dashboard', 'book', bid]);
-  //     } else {
-  //       this.router.navigate(['book', bid]);
-  //     }
-  //   }
-  // }
-
+  loadProducts() {
+    this.inProgress = true;
+    this._wishlistService.getProducts().subscribe(
+      (data: any) => {
+        if (data.status == "success") {
+          this.wishlist = data.products;
+        }
+        this.inProgress = false;
+      },
+      (err: any) => {
+        this.inProgress = false;
+      }
+    )
+  }
+  
+  openProductDetails(e: any, bid: any) {
+    if (e.target.nodeName != 'BUTTON') {
+      if (this.isLoggedIn) {
+        this.router.navigate(['dashboard', 'products', bid]);
+      } else {
+        this.router.navigate(['products', bid]);
+      }
+    }
+  }
 }
