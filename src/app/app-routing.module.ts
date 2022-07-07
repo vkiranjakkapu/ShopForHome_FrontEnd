@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AllBooksComponent } from './all-books/all-books.component';
 import { AllProductsComponent } from './all-products/all-products.component';
 import { BookdetailsComponent } from './bookdetails/bookdetails.component';
+import { CartComponent } from './cart/cart.component';
 import { CompletedComponent } from './completed/completed.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ManageproductsComponent } from './manageproducts/manageproducts.component';
@@ -21,6 +22,8 @@ const routes: Routes = [
         path: '', component: AllProductsComponent
       },
       {
+        path: 'cart', component: CartComponent
+      }, {
         path: 'manageproducts', component: ManageproductsComponent
       }, {
         path: 'products', component: AllProductsComponent,
@@ -64,4 +67,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
-export const viewComponents = [AllBooksComponent, AllProductsComponent, ProductDetailsComponent, ManageproductsComponent, ParticipantsComponent, WishlistComponent, CompletedComponent, BookdetailsComponent, NotFoundComponent, DashboardComponent];
+export const viewComponents = [AllBooksComponent, AllProductsComponent, CartComponent, ProductDetailsComponent, ManageproductsComponent, ParticipantsComponent, WishlistComponent, CompletedComponent, BookdetailsComponent, NotFoundComponent, DashboardComponent];

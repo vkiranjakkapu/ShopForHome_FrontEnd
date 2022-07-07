@@ -11,11 +11,11 @@ import { UsersService } from '../Services/users.service';
   styleUrls: ['./participants.component.css']
 })
 export class ParticipantsComponent implements OnInit {
-  
+
   public thisPage: string = "Participants";
   public usersList: User[] = [];
   public isProgress: boolean = false;
-  public alerts: {status: string, msg: string} = {status: "none", msg: ""};
+  public alerts: { status: string, msg: string, for: string } = { status: "none", msg: "", for: "" };
   public type: String = "create";
   public selectedUserID!: number;
   public modalTitle!: string;
@@ -28,11 +28,14 @@ export class ParticipantsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUsers();
-    this.curUser = this._authService.getCurrentUser();
+    this._authService.localAuthnticate(this._authService.getUserToken()).then((data: any) => {
+      this.curUser = this._authService.getCurrentUser();
+    })
   }
 
   setUserData(type: any, id: number) {
     this.isProgress = true;
+    this.alerts = { status: "none", msg: "", for: "" };
     this.type = type;
     if (type == "create") {
       this.modalTitle = "Create User";
@@ -56,11 +59,11 @@ export class ParticipantsComponent implements OnInit {
       this.modalTitle = "Create User";
       this.getUsers();
       let nUid = this.usersList.length;
-      this.user = new User(nUid+1,data?.name,data?.email,'',0,'password',data?.acctype);
+      this.user = new User(nUid + 1, data?.name, data?.email, '', 0, 'password', data?.acctype);
       this.addUser(this.user);
     } else if (this.type == "update") {
       this.modalTitle = "Update User";
-      this.user = new User(this.user.uid,data?.name,data?.email,this.user.phone,this.user.discard,this.user.password,data?.acctype);
+      this.user = new User(this.user.uid, data?.name, data?.email, this.user.phone, this.user.discard, this.user.password, data?.acctype);
       this.updateUser(this.user);
     }
   }
@@ -142,7 +145,7 @@ export class ParticipantsComponent implements OnInit {
         field.classList.remove('is-invalid');
         field.classList.remove('is-valid');
       });
-      this.alerts = {status: "none", msg: ""};
+      this.alerts = { status: "none", msg: "", for: "" };
     }
     if (type = "filled") {
     }

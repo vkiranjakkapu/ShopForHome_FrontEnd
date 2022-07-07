@@ -1,6 +1,6 @@
 <h1 class="text-center text-theme-primary">{{ thisPage }}</h1>
 <hr>
-<div class="container-fluid px-0">
+<div class="container-fluid px-0" *ngIf="(cart.length > 0)">
     <div class="row mx-2">
         <div class="col-4 d-flex align-items-center">
             <div class="d-flex justify-content-start align-items-center w-100">
@@ -11,12 +11,12 @@
             </div>
         </div>
         <div class="col-4 d-flex align-items-center">
-            <div class="d-flex justify-content-center align-items-center w-100">
+            <!-- <div class="d-flex justify-content-center align-items-center w-100">
                 <div class="input-group">
                     <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
                     <input type="search" name="search" id="search" class="form-control border-start-0 ps-0" [(ngModel)]="search" (keyup)="searchProducts()" placeholder="Search Products Here">
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="col-4 d-flex align-items-center justify-content-end">
             <div class="text-end">
@@ -27,20 +27,18 @@
     <hr>
 </div>
 <div class="container-fluid" [ngClass]="{'loading-effect': inProgress}" loading="Loading Products...">
-    <div class="alert alert-sm alert-info text-center mt-2" *ngIf="(productsList.length == 0)"><i class="bi bi-info-circle pe-2"></i>No Products in Database</div>
-    <div class="products-grid py-2" *ngIf="productsList.length > 0">
-        <div class="product" *ngFor="let prdct of productsList | paginate: { itemsPerPage: perPage, currentPage: page, id: 'allProducts' }" (click)="openProductDetails($event, prdct?.pid)">
+    <div class="alert alert-sm alert-info text-center mt-2" *ngIf="(cart.length == 0)">
+        <i class="bi bi-info-circle pe-2"></i>
+        No Products in Cart. <a href="/dashboard/products">Explore Products</a>
+    </div>
+    <div class="products-grid py-2" *ngIf="cart.length > 0">
+        <div class="product" *ngFor="let prdct of cart | paginate: { itemsPerPage: perPage, currentPage: page, id: 'allProducts' }" (click)="openProductDetails($event, prdct?.pid)">
             <div class="product-header"><div class="img position-relative">
                     <img src="{{ prdct?.image }}" alt="Dining Table" class="w-100">
-                    <div class="wishlist btn-group btn-group-vertical d-flex align-items-center justify-content-center" *ngIf="isLoggedIn">
-                        <button class="btn btn-sm d-flex align-items-center justify-content-center" (click)="modifyWishlist(prdct.getId())">
-                            <i title="Add to Wishlist" class="bi bi-heart" [ngClass]="{'d-none' : inWishlist(prdct.getId())}"></i>
-                            <i title="Remove from Wishlist" class="bi bi-heart-fill" [ngClass]="{'d-none' : !inWishlist(prdct.getId())}"></i>
-                        </button>
-                        <button class="btn btn-sm d-flex align-items-center justify-content-center" (click)="modifyCart(prdct.getId())">
-                            <i title="Add to Completed" class="bi bi-book-half" [ngClass]="{'d-none' : inCart(prdct.getId())}"></i>
-                            <i title="Remove from Completed" class="bi bi-book-fill" [ngClass]="{'d-none' : !inCart(prdct.getId())}"></i>
-                        </button>
+                    <div class="wishlist">
+                        <div class="btn-group btn-group-verticle ">
+                            <button class="btn"><i class="bi bi-heart"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>

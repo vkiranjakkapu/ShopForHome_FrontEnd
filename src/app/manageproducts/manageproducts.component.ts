@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpEventType, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -73,43 +73,6 @@ export class ManageproductsComponent implements OnInit {
     if (pathVars.pageId != undefined) {
       this.page = pathVars.pageId;
     }
-  }
-
-  readJson(event: any) {
-    var file = event.srcElement.files[0];
-    if (file) {
-      var reader = new FileReader();
-      reader.readAsText(file, "UTF-8");
-      reader.onload = (e: Event) => {
-        this.bulkUpdate(e);
-      }
-      reader.onerror = function (evt) {
-        console.log('error reading file');
-      }
-    }
-  }
-
-  upload() {
-    this.progress = 0;
-    this.currentFile = this.selectedFiles.item(0);
-    this._productsService.upload(this.currentFile).subscribe(
-      (event: any) => {
-        if (event.type === HttpEventType.UploadProgress) {
-          this.progress = Math.round(100 * event.loaded / event.total);
-        } else if (event instanceof HttpResponse) {
-          this.message = event.body.message;
-          this.fileInfos = this._productsService.getFiles();
-        }
-      },
-      (err: any) => {
-        this.progress = 0;
-        this.message = 'Could not upload the file!';
-        this.currentFile = undefined;
-      });
-    this.selectedFiles = undefined;
-  }
-  selectFile(event: any) {
-    this.selectedFiles = event.target.files;
   }
 
   bulkUpdate(file: any) {

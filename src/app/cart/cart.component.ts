@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../Entities/product.model';
@@ -7,11 +6,11 @@ import { CartService } from '../Services/cart.service';
 import { ProductsService } from '../Services/products.service';
 
 @Component({
-  selector: 'app-all-products',
-  templateUrl: './all-products.component.html',
-  styleUrls: ['./all-products.component.css']
+  selector: 'app-cart',
+  templateUrl: './cart.component.html',
+  styleUrls: ['./cart.component.css']
 })
-export class AllProductsComponent implements OnInit {
+export class CartComponent implements OnInit {
 
   public thisPage: string = "Store Books";
   public records: number[] = [8, 12, 16, 20, 24];
@@ -20,7 +19,7 @@ export class AllProductsComponent implements OnInit {
 
   public isLoggedIn: boolean = false;
   public inProgress = false;
-  public productsList: Product[] = [];
+  public cart: Product[] = [];
   public search: string = "";
 
   constructor(private _authService: AuthenticationsService, private _cartService: CartService, private _productsService: ProductsService, private router: Router, private _activeRouter: ActivatedRoute) {
@@ -31,18 +30,17 @@ export class AllProductsComponent implements OnInit {
   ngOnInit(): void {
     this.fetchProducts();
     this._activeRouter.params.subscribe((pages: any) => { this.getPathVariables(pages) });
-    if (this._authService.isLoggedIn()) {
-      this.router.navigate(['/dashboard']);
+    if (!this._authService.isLoggedIn()) {
+      this.router.navigate(['/']);
     }
-    this._authService.localAuthnticate(this._authService.getUserToken())
     this.isLoggedIn = this._authService.isLoggedIn();
   }
 
   fetchProducts() {
-    this._productsService.getProducts().subscribe(
+    this._cartService.getProducts().subscribe(
       (data: any) => {
         if (data.status == "success") {
-          this.productsList = data.products;
+          this.cart = data.products;
         }
       }
     );
@@ -58,31 +56,12 @@ export class AllProductsComponent implements OnInit {
     }
   }
 
-  searchProducts(): any {
-    this.inProgress = true;
-    if (this.search == "") {
-      this.loadProducts();
-      return 0;
-    }
-    this._productsService.searchProducts(this.search).subscribe(
-      (data: any) => {
-        if (data.status == "success") {
-          this.productsList = data.products;
-        }
-        this.inProgress = false;
-      },
-      (err: any) => {
-        this.inProgress = false;
-      }
-    )
-  }
-
   loadProducts() {
     this.inProgress = true;
-    this._productsService.getProducts().subscribe(
+    this._cartService.getProducts().subscribe(
       (data: any) => {
         if (data.status == "success") {
-          this.productsList = data.products;
+          this.cart = data.products;
         }
         this.inProgress = false;
       },
@@ -90,33 +69,6 @@ export class AllProductsComponent implements OnInit {
         this.inProgress = false;
       }
     )
-  }
-
-  inWishlist(id: any): boolean {
-    return this._cartService.inWishlist(id);
-  }
-
-  modifyWishlist(id: any) {
-    // this._cartService.modifyWishlist(id);
-  }
-
-  modifyCart(id: any) {
-    // this._bookService.modifyCart(id);
-    // this.modifyCartBooks = this._authService.getCurrentUser()?.getmodifyCart()?.map((bid)=>{return this._bookService.getBookById(bid)});
-  }
-
-  inCart(id: any): boolean {
-    return this._cartService.inCart(id);
-  }
-
-  openBookDetails(bid: any, e: any) {
-    if (e.target.nodeName != 'BUTTON') {
-      if (this.isLoggedIn) {
-        this.router.navigate(['dashboard', 'book', bid]);
-      } else {
-        this.router.navigate(['book', bid]);
-      }
-    }
   }
   
   openProductDetails(e: any, bid: any) {

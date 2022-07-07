@@ -14,13 +14,12 @@ export class UsersService {
 
   constructor(private _authService: AuthenticationsService, private http: HttpClient) { }
 
-
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.url}/`);
+    return this.http.get<User[]>(`${this.url}/${this._authService.getUserToken().token}`);
   }
 
   getUserById(id: number): Observable<User> {
-    return this.http.get<User>(`${this.url}/${id}`);
+    return this.http.get<User>(`${this.url}/${this._authService.getUserToken().token}/${id}`);
   }
 
   createUser(data: any): Observable<User> {
@@ -34,10 +33,10 @@ export class UsersService {
   }
 
   deleteUser(id: any): Observable<any> {
-    return this.http.delete<any>(`${this.url}/${id}/`);
+    return this.http.delete<any>(`${this.url}/${this._authService.getUserToken().token}/${id}`);
   }
 
   searchUsers(key: string): Observable<User[]> {
-    return this.http.get<User[]>(`${this.url}/search/${key}`);
+    return this.http.get<User[]>(`${this.url}/search/${key}/${this._authService.getUserToken().token}`);
   }
 }

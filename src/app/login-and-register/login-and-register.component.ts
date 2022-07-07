@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { User } from '../Entities/user.model';
 import { AuthenticationsService } from '../Services/authentications.service';
 
 @Component({
@@ -15,33 +16,39 @@ export class LoginAndRegisterComponent implements OnInit {
   loginStatus: string = "";
   isProgress: boolean = false;
   registerForm!: FormGroup;
-  alerts: {status: string, msg: string, for: string} = {status: "none", msg: "", for: ""};
+  alerts: { status: string, msg: string, for: string } = { status: "none", msg: "", for: "" };
 
   constructor(private _authService: AuthenticationsService, private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
-      uname: ['', [Validators.required]],
-      regEmail: ['', [Validators.required, Validators.email, Validators.pattern("[A-Za-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]],
-      phone: ['', [Validators.required, Validators.pattern("[0-9]{10}$")]],
-      npass: ['', [Validators.required]],
-      cpass: ['', [Validators.required]],
+      name: ['Sainath', [Validators.required]],
+      email: ['sainath@gmail.com', [Validators.required, Validators.email, Validators.pattern("[A-Za-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]],
+      phone: ['9493660145', [Validators.required, Validators.pattern("[0-9]{10}$")]],
+      password: ['sainath', [Validators.required]],
+      cpass: ['sainath', [Validators.required]],
     })
   }
 
   Register(data: any) {
     this.isProgress = true;
     this.alerts.for = "reg";
-    this._authService.registerUser(data).then((resp: any) => {
-      this.alerts.status = resp.status;
-      this.alerts.msg = resp.msg;
-      location.href = './dashboard';
-    }).catch((err) => {
+    if (data.cpass != data.password) {
+      this.alerts.msg = "Two Passwords Didn't Match!";
       this.alerts.status = "error";
-      this.alerts.msg = err.msg;
-    }).finally(()=>{
       this.isProgress = false;
-    });
+    } else {      
+      this._authService.registerUser(data).then((resp: any) => {
+        this.alerts.status = resp.status;
+        this.alerts.msg = resp.msg;
+        location.href = './dashboard';
+      }).catch((err) => {
+        this.alerts.status = "error";
+        this.alerts.msg = err.msg;
+      }).finally(() => {
+        this.isProgress = false;
+      });
+    }
   }
 
   async LoginUser(data: any) {
@@ -52,10 +59,10 @@ export class LoginAndRegisterComponent implements OnInit {
       this.alerts.status = res.status;
       this.loginEvent.emit();
       location.href = './dashboard';
-    }).catch((err)=>{
+    }).catch((err) => {
       this.alerts.msg = err.msg;
       this.alerts.status = err.status;
-    }).finally(()=>{
+    }).finally(() => {
       this.isProgress = false;
     });
   }

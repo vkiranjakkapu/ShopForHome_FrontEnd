@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Product } from '../Entities/product.model';
 import { User } from '../Entities/user.model';
 import { AuthenticationsService } from '../Services/authentications.service';
+import { CartService } from '../Services/cart.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,6 +16,8 @@ export class NavBarComponent implements OnInit {
 
   @Input('parentdata') public login: any;
   @Input('curUser') public user: User | undefined;
+  @Input('userCart') public cart: Product[] | undefined;
+  @Input('userWishlist') public wishlist: Product[] | undefined;
 
   constructor(private _authService: AuthenticationsService) { }
 

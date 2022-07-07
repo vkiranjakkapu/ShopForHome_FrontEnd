@@ -49,7 +49,7 @@ export class AuthenticationsService extends Data {
 
   async localAuthnticate(data: any) {
     let resp = new Promise((resolve, reject) => {
-      this.http.post<User>(`${this.url}token`, data).subscribe(
+      this.http.post<User>(`${environment.masterServiceURL}/authtoken/`, data).subscribe(
         (data: any) => {
           if (data.status == "success") {
             AuthenticationsService.curUser = data.user;
@@ -80,7 +80,7 @@ export class AuthenticationsService extends Data {
         (data: any) => {
           if (data.status == "success") {
             let newUser = data.user;
-            this.authenticateUser({ "id": newUser.getId(), "email": newUser.getEmail(), "password": newUser.getPassword() });
+            this.authenticateUser({ "id": newUser.id, "email": newUser.email, "password": newUser.password });
             AuthenticationsService.LoggedIn = true;
             resolve(data);
           } else {

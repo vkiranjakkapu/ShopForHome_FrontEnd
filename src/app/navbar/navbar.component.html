@@ -11,21 +11,34 @@
         <ng-container *ngIf="login; then profileTmplt; else authTmplt"></ng-container>
         <ng-template #profileTmplt>
           <li class="nav-item">
-            <a class="nav-link d-flex justify-content-center align-items-center" aria-current="page" routerLink="dashboard">Dashboard</a>
+            <a class="nav-link d-flex justify-content-center align-items-center" aria-current="page"
+              routerLink="dashboard">Dashboard</a>
           </li>
           <li class="nav-item" *ngIf="user?.acctype == 'admin'">
-              <a class="nav-link d-flex justify-content-center align-items-center" aria-current="page" routerLinkActive="active" routerLink="dashboard/participants">Participants</a>
+            <a class="nav-link d-flex justify-content-center align-items-center" aria-current="page"
+              routerLinkActive="active" routerLink="dashboard/participants">Participants</a>
           </li>
           <li class="nav-item" *ngIf="user?.acctype == 'admin'">
-              <a class="nav-link d-flex justify-content-center align-items-center" aria-current="page" routerLinkActive="active" routerLink="dashboard/manageproducts">Manage Products</a>
+            <a class="nav-link d-flex justify-content-center align-items-center" aria-current="page"
+              routerLinkActive="active" routerLink="dashboard/manageproducts">Manage Products</a>
           </li>
-          <!-- <li class="nav-item">
-            <a class="nav-link d-flex justify-content-center align-items-center" aria-current="page" routerLink="dashboard/wishlist">Wishlist</a>
-          </li> -->
+          <li class="nav-item" *ngIf="user?.acctype == 'user'">
+            <a class="nav-link d-flex justify-content-center align-items-center" aria-current="page"
+              routerLinkActive="active" routerLink="dashboard/cart">
+              <i class="bi bi-cart-fill"></i><span class="ms-2 badge bg-primary">{{ cart?.length }}</span>
+            </a>
+          </li>
+          <li class="nav-item" *ngIf="user?.acctype == 'user'">
+            <a class="nav-link d-flex justify-content-center align-items-center position-relative" aria-current="page"
+              routerLinkActive="active" routerLink="dashboard/wishlist">
+              <i class="bi bi-heart-fill pe-2"></i>
+              <span class="badge bg-primary">{{ wishlist?.length }}</span>
+            </a>
+          </li>
           <li>
             <div class="btn-group btn-group-vertical">
-              <a class="nav-link dropdown-toggle" href="#" profile-drpdwn
-                data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" href="#" profile-drpdwn data-bs-toggle="dropdown"
+                data-bs-display="static" aria-expanded="false">
                 <i class="bi bi-person"></i><span class="ps-2">{{ user?.name }}</span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg-end p-0">

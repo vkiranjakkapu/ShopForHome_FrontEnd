@@ -25,7 +25,7 @@
                             <tbody>
                                 <tr>
                                     <td>sainath@gmail.com</td>
-                                    <td>password</td>
+                                    <td>sainath</td>
                                 </tr>
                                 <tr>
                                     <td>venkatakiranj@gmail.com</td>
@@ -101,23 +101,23 @@
                         </div>
                         <div class="form">
                             <div class="mb-3 form-group">
-                                <label for="uname" class="form-label">User Name</label>
-                                <input type="text" class="form-control" name="uname" id="uname" formControlName="uname" [ngClass]="{'is-invalid': registerForm.controls.uname.errors && registerForm.controls.uname.touched, 'is-valid': !registerForm.controls.uname.errors && registerForm.controls.uname.touched}"
+                                <label for="name" class="form-label">User Name</label>
+                                <input type="text" class="form-control" name="name" id="name" formControlName="name" [ngClass]="{'is-invalid': registerForm.controls.name.errors && registerForm.controls.name.touched, 'is-valid': !registerForm.controls.name.errors && registerForm.controls.name.touched}"
                                     placeholder="Enter UserName" required>
                                 <div class="form-text text-danger"
-                                    *ngIf="(registerForm.controls.uname.touched || registerForm.controls.submitted) && registerForm.controls.uname.errors?.required">
+                                    *ngIf="(registerForm.controls.name.touched || registerForm.controls.submitted) && registerForm.controls.name.errors?.required">
                                     User name is a required field!
                                 </div>
                             </div>
                             <div class="mb-3 form-group">
-                                <label for="regEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" name="remail" id="regEmail" formControlName="regEmail" [ngClass]="{'is-invalid': registerForm.controls.regEmail.errors && registerForm.controls.regEmail.touched, 'is-valid': !registerForm.controls.regEmail.errors && registerForm.controls.regEmail.touched}"
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email" id="email" formControlName="email" [ngClass]="{'is-invalid': registerForm.controls.email.errors && registerForm.controls.email.touched, 'is-valid': !registerForm.controls.email.errors && registerForm.controls.email.touched}"
                                     placeholder="Enter Email Adddress" required>
-                                <div *ngIf="registerForm.controls.regEmail.touched">
-                                    <p class="form-text text-danger" *ngIf="registerForm.controls.regEmail.errors?.required">
+                                <div *ngIf="registerForm.controls.email.touched">
+                                    <p class="form-text text-danger" *ngIf="registerForm.controls.email.errors?.required">
                                         Email is a required field!
                                     </p>
-                                    <p class="form-text text-danger" *ngIf="registerForm.controls.regEmail.errors?.pattern">
+                                    <p class="form-text text-danger" *ngIf="registerForm.controls.email.errors?.pattern">
                                         This is not a valid Email!!!
                                     </p>
                                 </div>
@@ -136,11 +136,11 @@
                                 </div>
                             </div>
                             <div class="mb-3 form-group">
-                                <label for="npass" class="form-label">New Password</label>
-                                <input type="password" class="form-control" name="npass" id="npass" formControlName="npass" [ngClass]="{'is-invalid': registerForm.controls.npass.errors && registerForm.controls.npass.touched, 'is-valid': !registerForm.controls.npass.errors && registerForm.controls.npass.touched}"
+                                <label for="password" class="form-label">New Password</label>
+                                <input type="password" class="form-control" name="password" id="password" formControlName="password" [ngClass]="{'is-invalid': registerForm.controls.password.errors && registerForm.controls.password.touched, 'is-valid': !registerForm.controls.password.errors && registerForm.controls.password.touched}"
                                     placeholder="Enter New Password" required>
                                 <div class="form-text text-danger"
-                                    *ngIf="(registerForm.controls.npass.touched || registerForm.controls.submitted) && registerForm.controls.npass.errors?.required">
+                                    *ngIf="(registerForm.controls.password.touched || registerForm.controls.submitted) && registerForm.controls.password.errors?.required">
                                     Password is a required field!
                                 </div>
                             </div>
@@ -156,7 +156,7 @@
                         </div>
                         <div class="text-end">
                             <button type="submit" class="btn btn-primary btn-sm" reg-button
-                                [disabled]="( registerForm.controls.uname.errors?.required || registerForm.controls.regEmail.errors?.required || registerForm.controls.regEmail.errors?.pattern || registerForm.controls.phone.errors?.required || registerForm.controls.npass.errors?.required || registerForm.controls.cpass.errors?.required )">
+                                [disabled]="( registerForm.controls.name.errors?.required || registerForm.controls.email.errors?.required || registerForm.controls.email.errors?.pattern || registerForm.controls.phone.errors?.required || registerForm.controls.password.errors?.required || registerForm.controls.cpass.errors?.required )">
                                 <span class="d-flex align-items-center ">
                                     <span class="spinner spinner-grow spinner-grow-sm"
                                         [class]="isProgress ? 'd-block' : 'd-none'"></span>

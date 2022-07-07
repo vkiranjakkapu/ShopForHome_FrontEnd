@@ -14,8 +14,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import {HttpClientModule} from '@angular/common/http';
 import { ProductsService } from './Services/products.service';
 import { UsersService } from './Services/users.service';
-import { ParticipantsComponent } from './participants/participants.component';
-import { ProductDetailsComponent } from './product-details/product-details.component';
+import { CartComponent } from './cart/cart.component';
 
 @NgModule({
   declarations: [
