@@ -31,6 +31,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     background: #1974D2;
 }
 
+.bg-theme-savesoil-primary
+{
+    background: var(--save-soil-primary);
+}
+
+button:is(.bg-theme-savesoil-primary)
+{
+    border-color: var(--save-soil-primary);
+}
+
 .border-radius-custom {
     border-radius: 2em;
 }
@@ -166,6 +176,27 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     transform: translateY(-10px) scale(1.1);
 }
 
+/* Orders */
+
+.orders .order
+{
+    min-height: 250px;
+    
+}
+
+.orders .order .img
+{
+    width: 250px;
+    height: 250px;
+}
+
+.orders .order .img img
+{
+    width: 100%;
+    height: 100%;
+    object-fit: scale-down;
+}
+
 /* Wishlist */
 
 .wishlist {
@@ -181,15 +212,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     transition: .3s ease;
 }
 
+.product .wishlist.active,
 .product:hover .wishlist {
     opacity: 1;
     pointer-events: all;
     right: 1em;
 }
 
-.wishlist:hover
+.wishlist:is(.active, :hover)
 {
-    background: var(--theme-secondary);
+    background: var(--light);
 }
 
 .wishlist .bi
@@ -209,6 +241,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     background: #fff;
 }
 
+.wishlist.active .btn .bi,
 .wishlist:hover .btn:hover .bi
 {
     color: #fe351b;

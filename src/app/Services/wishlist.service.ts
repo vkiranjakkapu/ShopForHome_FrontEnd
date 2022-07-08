@@ -17,11 +17,11 @@ export class WishlistService {
   constructor(private _authService: AuthenticationsService, private http: HttpClient) { }
 
   getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.url}/`);
+    return this.http.get<Product[]>(`${this.url}/${this._authService.getUserToken().token}`);
   }
 
-  getUserCart() {
-    this._authService.localAuthnticate(this._authService.getUserToken).then(
+  getUserWishlist() {
+    this._authService.localAuthnticate(this._authService.getUserToken()).then(
       (data: any) => {
         if (data.status == "success") {
           this.cartIds = data.cart.pids;
@@ -31,11 +31,10 @@ export class WishlistService {
     )
   }
 
-  inCart(id: number): boolean {
-    return (this.cartIds.indexOf(id) != -1)
-  }
-
-  inWishlist(id: number): boolean {
-    return (this.wishlistIds.indexOf(id) != -1)
+  modifyWishlist(id: any, action: string):Observable<any> {
+    if (action == "add") {
+      return this.http.post<any>(`${this.url}/`, {token: this._authService.getUserToken().token, pid: id});
+    }
+    return this.http.delete<any>(`${this.url}/${id}/${this._authService.getUserToken().token}`);
   }
 }

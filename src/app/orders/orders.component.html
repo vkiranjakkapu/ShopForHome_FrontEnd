@@ -1,0 +1,122 @@
+<h1 class="text-center text-theme-primary">{{ thisPage }}</h1>
+<hr>
+<div class="container-fluid">
+    <div class="orders">
+        <div class="row order bg-light px-2 py-3">
+            <div
+                class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-xsm-12 d-flex align-items-center justify-content-center">
+                <div class="img">
+                    <img src="{{ product?.image }}" alt="{{ product?.image }}" class="img-fluid w-100">
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xsm-12 d-flex">
+                <div class="d-flex flex-column align-items-start justify-content-center">
+                    <h3 class="form-text fw-bold text-secondary">{{ product?.brandName }}</h3>
+                    <p class="">{{ product?.name }}</p>
+                    <p class="text-theme-secondary" *ngIf="product?.stock != 0">Only {{ product?.stock }} Pieces Available!</p>
+                    <p class="text-danger" *ngIf="product?.stock == 0">Product Out Of Stock! Explore More <a href="" routerLink="/dashboard/products">Here</a></p>
+                    <span class="display-6 text-theme-primary">Rs: {{ product?.price }} /-</span>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xsm-12 d-flex" *ngIf="product?.stock != 0">
+                <div class="d-flex flex-column align-items-start justify-content-center gap-3 bg-white p-3">
+                    <div class="">
+                        <div class="input-group">
+                            <span class="input-group-text text-default bg-white border-0">Order</span>
+                            <input type="number" class="form-control" placeholder="No of Products" min="1" max="{{ product?.stock }}" name="stock"
+                                id="stock" (input)="evaluateFinalPrice()" [(ngModel)]="itemsCount"
+                                value="{{ itemsCount }}" required>
+                            <span class="input-group-text text-default bg-white border-0">Products</span>
+                            <div *ngIf="itemsCount <= 0 || itemsCount>product.stock">
+                                <p class="form-text text-danger text-center" *ngIf="itemsCount <= 0">
+                                    Order cannot be placed for '0' selected!
+                                </p>
+                                <p class="form-text text-danger text-center" *ngIf="itemsCount > product.stock">
+                                    Product Out Of Stock For {{ itemsCount }} Items!
+                                </p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="input-group">
+                            <input type="text" name="coupon" id="coupon" class="form-control"
+                                placeholder="Enter Coupon Code" (input)="evaluateFinalPrice()" [(ngModel)]="coupon"
+                                required>
+                            <button class="btn btn-primary input-group-text" [disabled]="coupon == ''"
+                                (click)="validateCoupon(coupon)">
+                                <i class="bi bi-check-circle pe-2"></i>
+                                <span>Apply</span>
+                            </button>
+                        </div>
+                        <div *ngIf="coupon != '' && couponVerified">
+                            <p class="form-text text-danger text-start" *ngIf="!validCoupon">
+                                Invalid Valid Coupon!
+                            </p>
+                            <p class="form-text text-success text-start" *ngIf="validCoupon">
+                                Coupon Applied Successfully!
+                            </p>
+                        </div>
+                        <hr class="mb-1">
+                    </div>
+                    <div class="text-capitalize w-100">
+                        <div class="d-flex justify-content-between">
+                            <span>Product Price:</span>
+                            <span class=""> Rs {{ product.price }} /-</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <span>No. Of Items:</span>
+                            <span class=""> {{ itemsCount }}x</span>
+                        </div>
+                        <div *ngIf="validCoupon">
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <span>Applied Coupon Price:</span>
+                                <span class="text-success"> - Rs {{ couponPrice }} /-</span>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <span>Final Order Price:</span>
+                            <span class="text-success"> Rs {{ finalPrice }} /-</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-success"
+                        [disabled]="inProgress || product?.stock == 0 || ((itemsCount<0) || (finalPrice < 0) || (itemsCount > product.stock) || (coupon != '' && validCoupon))"
+                        (click)="purchaseProduct()">
+                        <i class="bi bi-truck pe-2" *ngIf="!inProgress"></i>
+                        <span class="spinner spinner-border spinner-border-sm me-2" *ngIf="inProgress"></span>
+                        <span>Order Now</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <h4 class="text-secondary fw-bold form-text">Previous Orders</h4>
+        <hr>
+        <div class="row order px-2 py-3" *ngFor="let order of prevOrders | paginate: { itemsPerPage: perPage, currentPage: page, id: 'allProducts' }">
+            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-xsm-12 d-flex align-items-center justify-content-center">
+                <div class="img">
+                    <img src="{{ order?.image }}" alt="{{ order?.image }}" class="img-fluid w-100">
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xsm-12 d-flex">
+                <div class="d-flex flex-column align-items-start justify-content-center">
+                    <h3 class="form-text fw-bold text-secondary">{{ order?.brandName }}</h3>
+                    <p class="">{{ order?.name }}</p>
+                    <p class="text-theme-secondary">Only {{ order?.stock }} Pieces Available!</p>
+                    <span class="fw-bold text-theme-primary">Rs: {{ order?.price }} /-</span>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-xsm-12 d-flex">
+                <div class="d-flex flex-column align-items-start justify-content-center gap-3">
+                    <span><span class="fw-bold form-text text-secondary">Date Purchased: </span> {{ order?.date }}</span>
+                    <span><span class="fw-bold form-text text-secondary">No. Of Items: </span> {{ order?.quantity }}</span>
+                    <span><span class="fw-bold form-text text-secondary">Order Price: </span> {{ order?.price }}</span>
+                </div>
+            </div>
+            <div class="col-12">
+                <hr>
+            </div>
+        </div>
+    </div>
+</div>

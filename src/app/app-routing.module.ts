@@ -8,6 +8,7 @@ import { CompletedComponent } from './completed/completed.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ManageproductsComponent } from './manageproducts/manageproducts.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { OrdersComponent } from './orders/orders.component';
 import { ParticipantsComponent } from './participants/participants.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { WishlistComponent } from './wishlist/wishlist.component';
@@ -20,47 +21,35 @@ const routes: Routes = [
     children: [
       {
         path: '', component: AllProductsComponent
-      },
-      {
+      }, {
         path: 'cart', component: CartComponent
       }, {
         path: 'wishlist', component: WishlistComponent
       }, {
         path: 'manageproducts', component: ManageproductsComponent
-      }, {
-        path: 'products', component: AllProductsComponent,
-        children: [
-          { path: ':pid', component: ProductDetailsComponent }
-        ]
+      },{
+        path: 'orders', component: OrdersComponent
+      },{
+        path: 'orders/:pid', component: OrdersComponent
+      },{
+        path: 'products', component: AllProductsComponent
+      }, { 
+        path: 'products/:pid', component: ProductDetailsComponent
       }, {
         path: 'manageproducts', component: ManageproductsComponent
       }, {
         path: 'participants', component: ParticipantsComponent
       }, {
-        path: 'completed', component: CompletedComponent
-      }, {
-        path: 'completed/:pageId', component: CompletedComponent
-      }, {
         path: 'wishlist', component: WishlistComponent
       }, {
         path: 'wishlist/:pageId', component: CompletedComponent
-      }, {
-        path: 'book/:bookId', component: BookdetailsComponent
-      }, {
-        path: 'book/:bookId/:bookName', component: BookdetailsComponent
       }
     ]
   },
-  {
-    path: 'products', component: AllProductsComponent,
-    children: [
-      { path: ':pid', component: ProductDetailsComponent }
-    ]
-  },
-  { path: 'books', component: AllBooksComponent },
-  { path: 'books/:pageId', component: AllBooksComponent },
-  { path: 'book/:bookId', component: BookdetailsComponent },
-  { path: 'book/:bookId/:bookName', component: BookdetailsComponent },
+  { path: 'orders', component: OrdersComponent },
+  { path: 'orders/:pid', component: OrdersComponent },
+  { path: 'products', component: AllProductsComponent },
+  { path: 'products/:pid', component: ProductDetailsComponent },
   { path: '404', component: NotFoundComponent }
 ];
 
@@ -69,4 +58,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
-export const viewComponents = [AllBooksComponent, AllProductsComponent, CartComponent, ProductDetailsComponent, ManageproductsComponent, ParticipantsComponent, WishlistComponent, CompletedComponent, BookdetailsComponent, NotFoundComponent, DashboardComponent];
+export const viewComponents = [AllBooksComponent, AllProductsComponent, OrdersComponent, CartComponent, ProductDetailsComponent, ManageproductsComponent, ParticipantsComponent, WishlistComponent, CompletedComponent, BookdetailsComponent, NotFoundComponent, DashboardComponent];

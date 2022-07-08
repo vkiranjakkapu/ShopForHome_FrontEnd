@@ -15,6 +15,11 @@ import {HttpClientModule} from '@angular/common/http';
 import { ProductsService } from './Services/products.service';
 import { UsersService } from './Services/users.service';
 import { CartComponent } from './cart/cart.component';
+import { CartService } from './Services/cart.service';
+import { WishlistService } from './Services/wishlist.service';
+import { OrderService } from './Services/order.service';
+import { OrdersComponent } from './orders/orders.component';
+import { Ng2OrderModule, Ng2OrderPipe } from 'ng2-order-pipe';
 
 @NgModule({
   declarations: [
@@ -31,9 +36,10 @@ import { CartComponent } from './cart/cart.component';
     FormsModule,
     NgxPaginationModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    Ng2OrderModule
   ],
-  providers: [AuthenticationsService, ProductsService, UsersService, BookService, Window],
+  providers: [AuthenticationsService, ProductsService, UsersService, CartService, WishlistService, OrderService, BookService, Window],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

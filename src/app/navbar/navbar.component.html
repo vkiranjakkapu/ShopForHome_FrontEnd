@@ -12,7 +12,7 @@
         <ng-template #profileTmplt>
           <li class="nav-item">
             <a class="nav-link d-flex justify-content-center align-items-center" aria-current="page"
-              routerLink="dashboard">Dashboard</a>
+              routerLink="dashboard" routerLinkActive="active">Dashboard</a>
           </li>
           <li class="nav-item" *ngIf="user?.acctype == 'admin'">
             <a class="nav-link d-flex justify-content-center align-items-center" aria-current="page"
@@ -26,14 +26,14 @@
             <a class="nav-link d-flex justify-content-center align-items-center" aria-current="page"
               routerLinkActive="active" routerLink="dashboard/cart">
               <i class="bi bi-cart-fill me-2"></i>Cart
-              <span class="ms-2 badge bg-primary">{{ cart?.length }}</span>
+              <span class="ms-2 badge bg-primary">{{ user?.cart?.length }}</span>
             </a>
           </li>
           <li class="nav-item" *ngIf="user?.acctype == 'user'">
             <a class="nav-link d-flex justify-content-center align-items-center position-relative" aria-current="page"
               routerLinkActive="active" routerLink="dashboard/wishlist">
               <i class="bi bi-heart-fill me-2"></i>Wishlist
-              <span class="badge bg-primary ms-2">{{ wishlist?.length }}</span>
+              <span class="badge bg-primary ms-2">{{ user?.wishlist?.length }}</span>
             </a>
           </li>
           <li>

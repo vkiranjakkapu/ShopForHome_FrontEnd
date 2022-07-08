@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Product } from '../Entities/product.model';
 import { AuthenticationsService } from './authentications.service';
 
 @Injectable({
@@ -10,14 +9,14 @@ import { AuthenticationsService } from './authentications.service';
 })
 export class CartService {
 
-  private url = environment.masterServiceURL+"/carts";
+  private url = environment.masterServiceURL+"/cart";
   public cartIds: number[] = [];
   public wishlistIds: number[] = [];
 
   constructor(private _authService: AuthenticationsService, private http: HttpClient) { }
 
-  getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.url}/`);
+  getProducts(): Observable<any> {
+    return this.http.get<any>(`${this.url}/${this._authService.getUserToken().token}`);
   }
 
   getUserCart() {
@@ -26,17 +25,17 @@ export class CartService {
         if (data.status == "success") {
           this.cartIds = data.cart.pids;
           this.wishlistIds = data.wishlist.pids;
+          alert(this.wishlistIds)
         }
       }
     )
   }
 
-  inCart(id: number): boolean {
-    return (this.cartIds.indexOf(id) != -1)
+  modifyCart(id: any, count: any, action: any):Observable<any> {
+    if (action == "add") {
+      let data = {token: this._authService.getUserToken().token, itemsCount: count, pid: id};
+      return this.http.post<any>(`${this.url}/`, data);
+    }
+    return this.http.delete<any>(`${this.url}/${id}/${this._authService.getUserToken().token}`);
   }
-
-  inWishlist(id: number): boolean {
-    return (this.wishlistIds.indexOf(id) != -1)
-  }
-  
 }
