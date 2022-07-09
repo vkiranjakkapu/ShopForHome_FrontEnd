@@ -23,7 +23,10 @@ export class OrderService {
   }
 
   valideCoupon(coupon: string): Observable<any> {
-    return this.http.get<any>(`${this.url}/coupons/${coupon}/${this._authService.getUserToken().token}`);
+    let data: FormData = new FormData();
+    data.append("token", this._authService.getUserToken().token);
+    data.append("coupon", coupon);
+    return this.http.put<any>(`${this.url}/orders/`, data);
   }
 
   removeFromOrder(id: any): Observable<any> {

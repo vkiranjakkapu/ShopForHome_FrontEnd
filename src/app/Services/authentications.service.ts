@@ -48,8 +48,10 @@ export class AuthenticationsService extends Data {
   }
 
   async localAuthnticate(data: any) {
+    let formData: FormData = new FormData();
+    formData.append("token", data.token);
     let resp = new Promise((resolve, reject) => {
-      this.http.post<User>(`${environment.masterServiceURL}/authtoken/`, data).subscribe(
+      this.http.post<User>(`${environment.masterServiceURL}/authtoken/`, formData).subscribe(
         (data: any) => {
           if (data.status == "success") {
             AuthenticationsService.curUser = data.user;

@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Coupon } from '../Entities/coupon.model';
 import { Product } from '../Entities/product.model';
 import { User } from '../Entities/user.model';
 import { AuthenticationsService } from '../Services/authentications.service';
@@ -15,22 +16,27 @@ import { ProductsService } from '../Services/products.service';
 export class OrdersComponent implements OnInit {
 
   public thisPage: string = "Store Books";
-  public records: number[] = [8, 12, 16, 20, 24];
+  public records: number[] = [4, 6, 8, 10, 12];
   public perPage: number = this.records[0];
   public page = 1;
 
   public pid!: number;
   public product!: Product;
   public itemsCount: number = 1;
-  public coupon!: string;
+  public couponCode: string = '';
   public finalPrice!: number;
   public couponPrice: number = 0;
   public validCoupon: boolean = false;
   public couponVerified: boolean = false;
   public curUser!: User;
   public inProgress = false;
+  public proceedPurchase = true;
+  private coupon!: Coupon;
 
   public prevOrders: any[] = [];
+
+  public sortOrderReverse: boolean = true;
+  public sortBy = "oid";
 
   constructor(private _authService: AuthenticationsService, private _orderService: OrderService, private _activeRouter: ActivatedRoute, private router: Router, private _productsService: ProductsService) { }
 
@@ -90,10 +96,21 @@ export class OrdersComponent implements OnInit {
     )
   }
 
+  updateSort(key: string) {
+    this.sortBy = key;
+    this.sortOrderReverse = !this.sortOrderReverse;
+  }
+
   purchaseProduct() {
+    let cpnid = 0;
     this.inProgress = true;
-    var data = {coupon: this.coupon, items: this.itemsCount, pid: this.pid, uid: this.curUser.uid, price: this.finalPrice, token: this._authService.getUserToken().token}
-    if (((this.itemsCount > 0) && (this.finalPrice > 0) && (this.itemsCount <= this.product.stock) && ((this.coupon == '' && this.validCoupon) || this.coupon == undefined))) {
+    if (!this.validCoupon) {
+      this.couponCode = "none";
+    } else {
+      cpnid = this.coupon.id;
+    }
+    var data = {cpnId: cpnid, coupon: this.couponCode, items: this.itemsCount, pid: this.pid, uid: this.curUser.uid, price: this.finalPrice, token: this._authService.getUserToken().token}
+    if (this.proceedPurchase) {
       this._orderService.placeOrder(data).subscribe(
         (data: any) => {
           this.inProgress = false;
@@ -108,17 +125,18 @@ export class OrdersComponent implements OnInit {
         }
       )
     } else {
-      // alert("Not In")
+      alert("Invalid Submission")
     }
     return 0;
   }
 
-  validateCoupon(coupon: string) {
-    this._orderService.valideCoupon(coupon).subscribe(
+  validateCoupon(cpnCode: string) {
+    this._orderService.valideCoupon(cpnCode).subscribe(
       (data: any) => {
         if (data.status == "success") {
           this.validCoupon = true;
-          this.couponPrice = data.offer;
+          this.coupon = data.coupon
+          this.couponPrice = data.coupon.offprice;
           this.evaluateFinalPrice();
         } else {
           this.validCoupon = false;
@@ -126,14 +144,52 @@ export class OrdersComponent implements OnInit {
           this.evaluateFinalPrice();
         }
         this.couponVerified = true;
+        this.validatePurchase();
       }, (err: any) => {
         console.log(err);
       }
     )
   }
 
+  validatePurchase() {
+    if (this.couponCode != '') {
+      if (this.validCoupon) {
+        if (this.couponCode != this.coupon.code) {
+          this.couponVerified = false;
+          this.couponPrice = 0;
+          this.proceedPurchase = false;
+          this.validCoupon = false;
+        } else {
+          this.proceedPurchase = true;
+        }
+      } else {
+        this.couponPrice = 0;
+        this.proceedPurchase = false;
+      }
+    } else if (this.couponCode == '') {
+      if (this.couponVerified) {
+        this.validCoupon = false;
+        this.couponVerified = false;
+        this.couponPrice = 0;
+        this.proceedPurchase = true;
+      } else {
+        this.couponPrice = 0;
+        this.proceedPurchase = true;
+      }
+    }
+    this.evaluateFinalPrice();
+  }
+
   evaluateFinalPrice() {
     this.finalPrice = (this.product.price * this.itemsCount) - this.couponPrice;
+  }
+
+  orderPage(pid: any) {
+    if (AuthenticationsService.LoggedIn) {
+      location.href = 'dashboard/orders/'+pid;
+    } else {
+      alert("Login To Order!");
+    }
   }
 
 }
