@@ -35,7 +35,7 @@ export class ProductsService {
     const formData: FormData = new FormData();
     formData.append('bulkfile', file);
     formData.append('token', this._authService.getUserToken().token);
-    return this.http.post<Product>(`${this.url}/ops`, formData);
+    return this.http.post<Product>(`${this.url}/ops/`, formData);
   }
 
   updateProduct(data: any): Observable<Product> {

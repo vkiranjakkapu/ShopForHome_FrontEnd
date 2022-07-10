@@ -15,13 +15,14 @@ import { ProductsService } from '../Services/products.service';
 })
 export class OrdersComponent implements OnInit {
 
-  public thisPage: string = "Store Books";
+  public thisPage: string = "Your Orders";
   public records: number[] = [4, 6, 8, 10, 12];
   public perPage: number = this.records[0];
   public page = 1;
 
   public pid!: number;
   public product!: Product;
+
   public itemsCount: number = 1;
   public couponCode: string = '';
   public finalPrice!: number;
@@ -30,6 +31,7 @@ export class OrdersComponent implements OnInit {
   public couponVerified: boolean = false;
   public curUser!: User;
   public inProgress = false;
+  public orderInProgress = false;
   public proceedPurchase = true;
   private coupon!: Coupon;
 
@@ -51,6 +53,9 @@ export class OrdersComponent implements OnInit {
     if (pathVars.pid != undefined) {
       this.pid = pathVars.pid;
     }
+    if (pathVars.itemsCount != undefined) {
+      this.itemsCount = pathVars.itemsCount;
+    }
   }
 
   refreshLogin() {
@@ -70,6 +75,7 @@ export class OrdersComponent implements OnInit {
   }
 
   fetchProduct() {
+    this.inProgress = true;
     this._productsService.getProductById(this.pid).subscribe(
       (data: any) => {
         if (data.status == "success") {
@@ -78,19 +84,23 @@ export class OrdersComponent implements OnInit {
         } else {
           console.log(data);
         }
+        this.inProgress = false;
       }, (err: HttpErrorResponse) => {
-        console.log(err);
+        this.inProgress = false;
       }
     )
   }
 
   loadPrevOrders() {
+    this.inProgress = true;
     this._orderService.getOrders().subscribe(
       (data: any) => {
         if (data.status == "success") {
           this.prevOrders = data.orders;
         }
+        this.inProgress = false;
       }, (err: HttpErrorResponse) => {
+        this.inProgress = false;
         console.log(err);
       }
     )
@@ -103,7 +113,7 @@ export class OrdersComponent implements OnInit {
 
   purchaseProduct() {
     let cpnid = 0;
-    this.inProgress = true;
+    this.orderInProgress = true;
     if (!this.validCoupon) {
       this.couponCode = "none";
     } else {
@@ -113,15 +123,19 @@ export class OrdersComponent implements OnInit {
     if (this.proceedPurchase) {
       this._orderService.placeOrder(data).subscribe(
         (data: any) => {
-          this.inProgress = false;
+          this.orderInProgress = false;
           if (data.status == "success") {
             this.loadPrevOrders();
             this.fetchProduct();
-            alert("Order Placed Success fully!");
+            this.couponCode = '';
+            this.validCoupon = false;
+            alert("Order Placed Successfully!");
+          } else if (data.status == "error") {
+            alert(data.msg)
           }
         }, (err: any) => {
           console.log(err);
-          this.inProgress = false;
+          this.orderInProgress = false;
         }
       )
     } else {

@@ -31,10 +31,14 @@ export class CartService {
     )
   }
 
-  modifyCart(id: any, count: any, action: any):Observable<any> {
+  modifyCart(id: any, count: number, action: any):Observable<any> {
     if (action == "add") {
       let data = {token: this._authService.getUserToken().token, itemsCount: count, pid: id};
       return this.http.post<any>(`${this.url}/`, data);
+    }
+    if (action == "update") {
+      let data = {token: this._authService.getUserToken().token, itemsCount: count, pid: id};
+      return this.http.put<any>(`${this.url}/`, data);
     }
     return this.http.delete<any>(`${this.url}/${id}/${this._authService.getUserToken().token}`);
   }

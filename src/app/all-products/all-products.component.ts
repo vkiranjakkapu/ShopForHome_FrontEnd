@@ -16,22 +16,24 @@ import { WishlistService } from '../Services/wishlist.service';
 export class AllProductsComponent implements OnInit {
 
   public thisPage: string = "Store Books";
-  public records: number[] = [8, 12, 16, 20, 24];
+  public records: number[] = [6, 9, 18, 27, 36, 45];
   public perPage: number = this.records[0];
   public page = 1;
 
   public isLoggedIn: boolean = false;
   public inProgress = false;
   public productsList: Product[] = [];
+  public categoryList: string[] = [];
   public wishlist: number[] = [];
   public cart: number[] = [];
   public search: string = "";
-  private user!: User;
   public itemsCount: number = 1;
 
   public sortType: string = "";
   public sortBy: string = "price";
+  public sortCategory: string = "";
   public sortReverse: boolean = true;
+  public user!: User;
 
   constructor(private _authService: AuthenticationsService, private _cartService: CartService, private _wishlistService: WishlistService, private _productsService: ProductsService, private router: Router, private _activeRouter: ActivatedRoute) {
     this.loadProducts();
@@ -39,13 +41,22 @@ export class AllProductsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadProducts();
-    this._activeRouter.params.subscribe((pages: any) => { this.getPathVariables(pages) });
     this.refreshUser();
+    this._activeRouter.params.subscribe((pages: any) => { this.getPathVariables(pages) });
+    this.loadProducts();
   }
 
-  sortProducts() {
+  sortProducts(type: string) {
+    this.sortType = type;
     this.sortReverse = !this.sortReverse;
+  }
+
+  sortByCategory(e: any) {
+    let type = e.target.value;
+    if (type != this.sortCategory) {
+      this.sortCategory = type;
+      this.loadProducts();
+    }
   }
 
   selectPage(page: string) {
@@ -68,6 +79,15 @@ export class AllProductsComponent implements OnInit {
       (data: any) => {
         if (data.status == "success") {
           this.productsList = data.products;
+          if (this.sortCategory != '') {
+            let sorted: Product[] = [];
+            this.productsList.map((prd: Product) => {
+              if (prd.category == this.sortCategory) {
+                sorted.push(prd);
+              }
+            });
+            this.productsList = sorted;
+          }
         }
         this.inProgress = false;
       },
@@ -83,6 +103,16 @@ export class AllProductsComponent implements OnInit {
       (data: any) => {
         if (data.status == "success") {
           this.productsList = data.products;
+          if (this.sortCategory != '') {
+            let sorted: Product[] = [];
+            this.productsList.map((prd: Product) => {
+              if (prd.category == this.sortCategory) {
+                sorted.push(prd);
+              }
+            });
+            this.productsList = sorted;
+          }
+          this.loadCatogaries();
         }
         this.inProgress = false;
       },
@@ -92,21 +122,35 @@ export class AllProductsComponent implements OnInit {
     )
   }
 
+  loadCatogaries() {
+    this.productsList.map((prd: Product) => {
+      this.categoryList.push(prd.category);
+    });
+    this.categoryList = [...new Set(this.categoryList)];
+  }
+
   refreshUser() {
+    this.inProgress = true;
     this._authService.localAuthnticate(this._authService.getUserToken()).then((data: any) => {
       if (data.status == "success") {
         if (!this.router.url.includes('dashboard')) {
           this.router.navigate(['/dashboard']);
         }
-        this.wishlist = data.wishlist.pids;
-        this.cart = data.cart.pids;
+        this.user = data.user;
+        this.wishlist = data.user.wishlist;
+        this.cart = data.user.cart;
         this.isLoggedIn = this._authService.isLoggedIn();
       }
+      this.inProgress = false;
     })
   }
 
   inWishlist(id: any): boolean {
     return (this.wishlist.indexOf(id) != -1);
+  }
+
+  inCart(id: any): boolean {
+    return (this.cart.indexOf(id) != -1);
   }
 
   modifyWishlist(id: any) {
@@ -120,9 +164,7 @@ export class AllProductsComponent implements OnInit {
           alert(data.msg);
           this.refreshUser();
           this.loadProducts();
-          setTimeout(() => {
-            location.href = "./dashboard/wishlist";
-          }, 100);
+          location.href = "./dashboard/wishlist";
         } else {
           console.log(data);
         }
@@ -133,13 +175,19 @@ export class AllProductsComponent implements OnInit {
   }
 
   modifyCart(id: any) {
+
+    if (this._authService.getUserToken() == null) {
+      alert("Login To Add this Item to cart!");
+      return 0;
+    }
+    
     let method = "remove";
-    let max, count;
+    let max!: number, count!: number;
     if (!this.inCart(id)) {
       method = "add";
       let countInp: any = document.getElementById(`itemsCount_${id}`);
-      count = countInp.value;
-      max = countInp.attributes.max;
+      count = parseInt(countInp.value);
+      max = parseInt(countInp.attributes.max.value);
       if (count < 0) {
         alert(count + " items cannot be added!");
         return 0;
@@ -154,9 +202,7 @@ export class AllProductsComponent implements OnInit {
           alert(data.msg);
           this.refreshUser();
           this.loadProducts();
-          setTimeout(() => {
-            location.href = "./dashboard/cart";
-          }, 100);
+          location.href = "./dashboard/cart";
         } else {
           console.log(data);
         }
@@ -165,10 +211,6 @@ export class AllProductsComponent implements OnInit {
       }
     );
     return 0;
-  }
-
-  inCart(id: any): boolean {
-    return (this.cart.indexOf(id) != -1);
   }
 
   openProductDetails(e: any, bid: any) {
@@ -187,6 +229,10 @@ export class AllProductsComponent implements OnInit {
     } else {
       alert("Login To Order!");
     }
+  }
+
+  truncate(input: string, length: number) {
+    return input.length > length ? `${input.substring(0, length)}...` : input;
   }
 
 }

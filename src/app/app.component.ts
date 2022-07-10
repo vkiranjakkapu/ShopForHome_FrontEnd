@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Product } from './Entities/product.model';
 import { User } from './Entities/user.model';
 import { AuthenticationsService } from './Services/authentications.service';
-import { BookService } from './Services/books.service';
 import { CartService } from './Services/cart.service';
 
 @Component({

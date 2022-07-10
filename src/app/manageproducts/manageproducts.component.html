@@ -1,8 +1,8 @@
 <h1 class="text-center text-theme-primary">{{ thisPage }}</h1>
 <hr>
 <div class="container-fluid px-0">
-    <div class="row mx-2">
-        <div class="col-3 d-flex align-items-center">
+    <div class="row">
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xsm-12 d-flex align-items-center">
             <div class="d-flex justify-content-start align-items-center w-100">
                 <label for="perpage">Show : &nbsp;</label>
                 <select name="perpage" class="form-control form-select w-25" id="perpage" [(ngModel)]="perPage">
@@ -10,7 +10,7 @@
                 </select>&nbsp; Products per page
             </div>
         </div>
-        <div class="col-3 d-flex align-items-center">
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xsm-12 d-flex align-items-center">
             <div class="d-flex justify-content-center align-items-center w-100">
                 <div class="input-group">
                     <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
@@ -19,61 +19,87 @@
                 </div>
             </div>
         </div>
-        <div class="col-3 d-flex align-items-center">
-            <div class="d-flex justify-content-center align-items-center w-100">
-                <div class="btn btn-group">
-                    <button class="btn btn-primary text-white" data-bs-toggle="modal"
-                        data-bs-target="#createproductsModal">
-                        <i class="bi bi-box2 pe-2"></i>Create
-                    </button>
-                    <button class="btn btn-success text-white" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
-                        <i class="bi bi-filetype-csv pe-2"></i>Upload
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="col-3 d-flex align-items-center justify-content-end">
-            <div class="text-end">
-                <pagination-controls class="pagination" id="allProducts" [maxSize]="5" [autoHide]="true"
-                    [responsive]="true" previousLabel="" nextLabel="" (pageChange)="page = $event">
-                </pagination-controls>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xsm-12 d-flex align-items-center justify-content-end">
+            <div class="btn btn-group">
+                <button class="btn btn-primary text-white" data-bs-toggle="modal"
+                    data-bs-target="#createproductsModal">
+                    <i class="bi bi-box2 pe-2"></i>Create
+                </button>
+                <button class="btn btn-success text-white" data-bs-toggle="modal" data-bs-target="#bulkUploadModal">
+                    <i class="bi bi-filetype-csv pe-2"></i>Upload
+                </button>
             </div>
         </div>
     </div>
     <hr>
 </div>
 <div class="container-fluid" [ngClass]="{'loading-effect': inProgress}" loading="Loading Products...">
-    <div class="alert alert-sm alert-info text-center mt-2" *ngIf="(productsList?.length == 0) && !inProgress"><i
-            class="bi bi-info-circle pe-2"></i>No Products in Database</div>
-    <div class="products-grid py-2" *ngIf="productsList.length > 0">
-        <div class="product"
-            *ngFor="let prdct of productsList | paginate: { itemsPerPage: perPage, currentPage: page, id: 'allProducts' }"
-            (click)="openProductDetails($event, prdct?.pid)">
-            <div class="product-header">
-                <div class="img position-relative">
-                    <img src="{{ prdct?.image }}" alt="Dining Table" class="w-100">
-                    <!-- <div class="wishlist">
-                        <div class="btn-group btn-group-verticle ">
-                            <button class="btn"><i class="bi bi-heart"></i></button>
-                        </div>
-                    </div> -->
-                </div>
+    <div class="row">
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xsm-12">
+            <h4 class="text-secondary mb-0">Filters</h4>
+            <hr>
+            <label for="search">Search Products Here</label><br>
+            <div class="input-group mt-2">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                <input type="search" name="search" id="search" class="form-control border-start-0 ps-0"
+                    [(ngModel)]="search" (keyup)="searchProducts()" placeholder="Search Products Here">
             </div>
-            <div class="product-body p-2">
-                <p>
-                    <span class="fw-bold text-theme-secondary price">&#8377; {{ prdct?.price }} <small
-                            class="text-secondary"><s>&nbsp;xxxxx&nbsp;</s></small></span><br>
-                    <small class="text-savesoil-primary fw-bold">50% Off</small><br>
-                    <span><small class="text-muted fw-bold">{{ prdct?.brandName }}</small></span><br>
-                    <span class="title">{{ prdct?.name }}</span>
-                </p>
-                <div class="text-center">
-                    <div class="btn-group w-100">
-                        <button class="btn btn-info text-white" (click)="setProductData('update', prdct.pid, $event)"
-                            data-bs-toggle="modal" data-bs-target="#eidtproductsModal"><i
-                                class="bi bi-pencil pe-2"></i>Edit</button>
-                        <button class="btn btn-danger" (click)="deleteProduct(prdct.pid)"><i
-                                class="bi bi-trash pe-2"></i>Delete</button>
+            <hr>
+            <label for="priceSort">Sort By Price</label><br>
+            <select name="priceSort" class="form-control mt-2 form-select" id="priceSort" (change)="sortProducts('price')">
+                <option value="{{ sortBy }}" [selected]>Price Sort</option>
+                <option value="asc">Price Low to High</option>
+                <option value="desc">Price High to Low</option>
+            </select>
+            <hr>
+            <label for="catSort">Category Sort</label><br>
+            <select name="catSort" class="form-control mt-2 form-select" id="catSort" (change)="sortByCategory($event)">
+                <option value="">Category Sort</option>
+                <option value="{{bname}}" *ngFor="let bname of categoryList">{{ bname }}</option>
+            </select>
+            <hr>
+            <div class="text-center">
+                <pagination-controls class="pagination" id="allProducts" [maxSize]="5" [autoHide]="true"
+                    [responsive]="true" previousLabel="" nextLabel="" (pageChange)="page = $event">
+                </pagination-controls>
+            </div>
+        </div>
+        <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12 col-xsm-12">
+            <div class="alert alert-sm alert-info text-center mt-2" *ngIf="(productsList?.length == 0) && !inProgress"><i
+                    class="bi bi-info-circle pe-2"></i>No Products in Database</div>
+            <div class="products-grid py-2" *ngIf="productsList.length > 0">
+                <div class="product"
+                    *ngFor="let prdct of productsList | orderBy: sortBy : sortReverse  | paginate: { itemsPerPage: perPage, currentPage: page, id: 'allProducts' }"
+                    (click)="openProductDetails($event, prdct?.pid)">
+                    <div class="product-header">
+                        <div class="img position-relative">
+                            <img src="{{ prdct?.image }}" alt="Dining Table" class="w-100">
+                            <!-- <div class="wishlist">
+                                <div class="btn-group btn-group-verticle ">
+                                    <button class="btn"><i class="bi bi-heart"></i></button>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="product-body p-2">
+                        <p>
+                            <span class="fw-bold text-theme-secondary price">&#8377; {{ prdct?.price }} <small
+                                    class="text-secondary"><s>{{ (prdct.price)*2 }}</s></small></span><br>
+                            <small class="text-success fw-bold">50% Off</small><br>
+                            <span><small class="text-muted fw-bold">{{ prdct?.brandName }}</small></span><br>
+                            <span class="title">{{ truncate(prdct?.name, 80) }}</span>
+                        </p>
+                        <div class="text-center">
+                            <div class="btn-group w-100">
+                                <button class="btn btn-info text-white" (click)="setProductData('update', prdct.pid, $event)"
+                                    data-bs-toggle="modal" data-bs-target="#eidtproductsModal" skiproute>
+                                    <i class="bi bi-pencil pe-2" skiproute></i>Edit
+                                </button>
+                                <button class="btn btn-danger" (click)="deleteProduct(prdct.pid)" skiproute>
+                                    <i class="bi bi-trash pe-2" skiproute></i>Delete
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -151,7 +177,7 @@
                             </div>
                             <div class="mb-3 form-group">
                                 <label for="prdprice" class="form-label">Price</label>
-                                <input type="number" class="form-control" name="prdprice" id="prdprice"
+                                <input type="number" class="form-control" name="prdprice" id="prdprice" min="0"
                                     [ngClass]="{'is-invalid': prdprice.errors && prdprice.touched, 'is-valid': !prdprice.errors && prdprice.touched}"
                                     placeholder="Enter Product Price" #prdprice="ngModel" ngModel required>
                                 <div *ngIf="prdprice.touched">
@@ -162,7 +188,7 @@
                             </div>
                             <div class="mb-3 form-group">
                                 <label for="prdstock" class="form-label">Stock</label>
-                                <input type="number" class="form-control" name="prdstock" id="prdstock"
+                                <input type="number" class="form-control" name="prdstock" id="prdstock" min="0"
                                     [ngClass]="{'is-invalid': prdstock.errors && prdstock.touched, 'is-valid': !prdstock.errors && prdstock.touched}"
                                     placeholder="Enter Product Price" #prdstock="ngModel" ngModel required>
                                 <div *ngIf="prdstock.touched">
@@ -256,128 +282,126 @@
                 <h2 class="modal-title" id="loginModalLabel">Update Product</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form #productsModal="ngForm" (ngSubmit)="updateProduct(productsModal.value)">
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="form">
-                            <div class="alert alert-sm p-2 text-capitalize"
-                                [ngClass]="{'d-none': (alerts.status == 'none'), 'alert-success': (alerts.status == 'success'), 'alert-danger': (alerts.status == 'error')}"
-                                *ngIf="alerts.for == 'update'">
-                                <i class="bi bi-exclamation-circle-fill pe-2" *ngIf="(alerts.status == 'error')"></i>
-                                <i class="bi bi-check-circle-fill pe-2" *ngIf="(alerts.status == 'success')"></i>
-                                {{ alerts.msg }}
-                            </div>
-                            <div class="mb-3 form-group">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" name="name" id="name"
-                                    [ngClass]="{'is-invalid': name.errors && name.touched, 'is-valid': !name.errors && name.touched}"
-                                    placeholder="Enter User Name" #name="ngModel" ngModel required
-                                    value="{{product?.name}}">
-                                <div *ngIf="name.touched">
-                                    <p class="form-text text-danger" *ngIf="name.errors?.['required']">
-                                        Name is a required field!
-                                    </p>
+            <ng-container *ngIf="product">
+                <form #editProductsModal="ngForm" (ngSubmit)="updateProduct(editProductsModal.value)">
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="form">
+                                <div class="alert alert-sm p-2 text-capitalize"
+                                    [ngClass]="{'d-none': (alerts.status == 'none'), 'alert-success': (alerts.status == 'success'), 'alert-danger': (alerts.status == 'error')}"
+                                    *ngIf="alerts.for == 'update'">
+                                    <i class="bi bi-exclamation-circle-fill pe-2" *ngIf="(alerts.status == 'error')"></i>
+                                    <i class="bi bi-check-circle-fill pe-2" *ngIf="(alerts.status == 'success')"></i>
+                                    {{ alerts.msg }}
+                                </div>
+                                <div class="mb-3 form-group">
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" class="form-control" name="name" id="name"
+                                        [ngClass]="{'is-invalid': name.errors && name.touched, 'is-valid': !name.errors && name.touched}"
+                                        placeholder="Enter User Name" #name="ngModel" [(ngModel)]="product.name" required>
+                                    <div *ngIf="name.touched">
+                                        <p class="form-text text-danger" *ngIf="name.errors?.['required']">
+                                            Name is a required field!
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="mb-3 form-group">
+                                    <label for="price" class="form-label">Price</label>
+                                    <input type="number" class="form-control" name="price" id="price" min="0"
+                                        [ngClass]="{'is-invalid': price.errors && price.touched, 'is-valid': !price.errors && price.touched}"
+                                        placeholder="Enter Product Price" #price="ngModel" [(ngModel)]="product.price" required>
+                                    <div *ngIf="price.touched">
+                                        <p class="form-text text-danger" *ngIf="price.errors?.['required']">
+                                            Price is a required field!
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="mb-3 form-group">
+                                    <label for="stock" class="form-label">Stock</label>
+                                    <input type="number" class="form-control" name="stock" id="stock" min="0"
+                                        [ngClass]="{'is-invalid': stock.errors && stock.touched, 'is-valid': !stock.errors && stock.touched}"
+                                        placeholder="Enter Product Price" #stock="ngModel"  [(ngModel)]="product.stock" required>
+                                    <div *ngIf="stock.touched">
+                                        <p class="form-text text-danger" *ngIf="stock.errors?.['required']">
+                                            Stock is a required field!
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="mb-3 form-group">
+                                    <label for="image" class="form-label">Image URL</label>
+                                    <input type="text" class="form-control" name="image" id="image"
+                                        [ngClass]="{'is-invalid': image.errors && image.touched, 'is-valid': !image.errors && image.touched}"
+                                        placeholder="Enter Product Price" #image="ngModel"  [(ngModel)]="product.image" required>
+                                    <div *ngIf="image.touched">
+                                        <p class="form-text text-danger" *ngIf="image.errors?.['required']">
+                                            Image URL is a required field!
+                                        </p>
+                                    </div>
+                                </div>
+                                <!-- <div class="mb-3 form-group">
+                                    <label for="category" class="form-label">Category</label>
+                                    <select name="category" class="form-select" id="category" [ngClass]="{'is-invalid': category.errors && category.touched, 'is-valid': !category.errors && category.touched}" #category="ngModel" ngModel required>
+                                        <option value="cat1">cat1</option>
+                                        <option value="cat2">cat2</option>
+                                    </select>
+                                    <div *ngIf="category.touched">
+                                        <p class="form-text text-danger" *ngIf="category.errors?.['required']">
+                                            Category Type is a required field!
+                                        </p>
+                                    </div>
+                                </div> -->
+                                <div class="mb-3 form-group">
+                                    <label for="category" class="form-label">Category</label>
+                                    <input type="text" class="form-control" placeholder="Enter Category" name="category"
+                                        id="category"
+                                        [ngClass]="{'is-invalid': category.errors && category.touched, 'is-valid': !category.errors && category.touched}"
+                                        #category="ngModel"  [(ngModel)]="product.category" required>
+                                    <div *ngIf="category.touched">
+                                        <p class="form-text text-danger" *ngIf="category.errors?.['required']">
+                                            Category Type is a required field!
+                                        </p>
+                                    </div>
+                                </div>
+                                <!-- <div class="mb-3 form-group">
+                                    <label for="brandName" class="form-label">Brand Name</label>
+                                    <select name="brandName" class="form-select" id="brandName" [ngClass]="{'is-invalid': brandName.errors && brandName.touched, 'is-valid': !brandName.errors && brandName.touched}" #brandName="ngModel" ngModel required>
+                                        <option *ngFor="let brand of distinctBrands">{{brand?.brandName}}</option>
+                                    </select>
+                                    <div *ngIf="brandName.touched">
+                                        <p class="form-text text-danger" *ngIf="brandName.errors?.['required']">
+                                            Brand Name is a required field!
+                                        </p>
+                                    </div>
+                                </div> -->
+                                <div class="mb-3 form-group">
+                                    <label for="brandName" class="form-label">Brand Name</label>
+                                    <input type="text" class="form-control" placeholder="Enter Brand Name" name="brandName"
+                                        id="brandName"
+                                        [ngClass]="{'is-invalid': brandName.errors && brandName.touched, 'is-valid': !brandName.errors && brandName.touched}"
+                                        #brandName="ngModel"  [(ngModel)]="product.brandName" required>
+                                    <div *ngIf="brandName.touched">
+                                        <p class="form-text text-danger" *ngIf="brandName.errors?.['required']">
+                                            Brand Name is a required field!
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="mb-3 form-group">
-                                <label for="price" class="form-label">Price</label>
-                                <input type="number" class="form-control" name="price" id="price"
-                                    [ngClass]="{'is-invalid': price.errors && price.touched, 'is-valid': !price.errors && price.touched}"
-                                    placeholder="Enter Product Price" #price="ngModel" ngModel required
-                                    value="{{product?.price}}">
-                                <div *ngIf="price.touched">
-                                    <p class="form-text text-danger" *ngIf="price.errors?.['required']">
-                                        Price is a required field!
-                                    </p>
-                                </div>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary btn-sm"
+                                    [ngClass]="{'disbaled': (inProgress || (name.errors?.['required'] || category.errors?.['required']) && btnDisable)}"
+                                    login-btn>
+                                    <span class="d-flex align-items-center ">
+                                        <span class="spinner spinner-grow spinner-grow-sm"
+                                            [class]="inProgress ? 'd-block' : 'd-none'"></span>
+                                        <i class="bi bi-pencil" [class]="inProgress ? 'd-none' : 'd-block'"></i>
+                                        <span class="ps-2">Update</span>
+                                    </span>
+                                </button>
                             </div>
-                            <div class="mb-3 form-group">
-                                <label for="stock" class="form-label">Stock</label>
-                                <input type="number" class="form-control" name="stock" id="stock"
-                                    [ngClass]="{'is-invalid': stock.errors && stock.touched, 'is-valid': !stock.errors && stock.touched}"
-                                    placeholder="Enter Product Price" #stock="ngModel" ngModel required
-                                    value="{{product?.stock}}">
-                                <div *ngIf="stock.touched">
-                                    <p class="form-text text-danger" *ngIf="stock.errors?.['required']">
-                                        Stock is a required field!
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="mb-3 form-group">
-                                <label for="image" class="form-label">Image URL</label>
-                                <input type="text" class="form-control" name="image" id="image"
-                                    [ngClass]="{'is-invalid': image.errors && image.touched, 'is-valid': !image.errors && image.touched}"
-                                    placeholder="Enter Product Price" #image="ngModel" ngModel required
-                                    value="{{product?.image}}">
-                                <div *ngIf="image.touched">
-                                    <p class="form-text text-danger" *ngIf="image.errors?.['required']">
-                                        Image URL is a required field!
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- <div class="mb-3 form-group">
-                                <label for="category" class="form-label">Category</label>
-                                <select name="category" class="form-select" id="category" [ngClass]="{'is-invalid': category.errors && category.touched, 'is-valid': !category.errors && category.touched}" #category="ngModel" ngModel required value="{{product?.category}}">
-                                    <option value="cat1">cat1</option>
-                                    <option value="cat2">cat2</option>
-                                </select>
-                                <div *ngIf="category.touched">
-                                    <p class="form-text text-danger" *ngIf="category.errors?.['required']">
-                                        Category Type is a required field!
-                                    </p>
-                                </div>
-                            </div> -->
-                            <div class="mb-3 form-group">
-                                <label for="category" class="form-label">Category</label>
-                                <input type="text" class="form-control" placeholder="Enter Category" name="category"
-                                    id="category"
-                                    [ngClass]="{'is-invalid': category.errors && category.touched, 'is-valid': !category.errors && category.touched}"
-                                    #category="ngModel" ngModel required value="{{product?.category}}">
-                                <div *ngIf="category.touched">
-                                    <p class="form-text text-danger" *ngIf="category.errors?.['required']">
-                                        Category Type is a required field!
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- <div class="mb-3 form-group">
-                                <label for="brandName" class="form-label">Brand Name</label>
-                                <select name="brandName" class="form-select" id="brandName" [ngClass]="{'is-invalid': brandName.errors && brandName.touched, 'is-valid': !brandName.errors && brandName.touched}" #brandName="ngModel" ngModel required value="{{product?.brandName}}">
-                                    <option *ngFor="let brand of distinctBrands" value="{{brand?.brandName}}">{{brand?.brandName}}</option>
-                                </select>
-                                <div *ngIf="brandName.touched">
-                                    <p class="form-text text-danger" *ngIf="brandName.errors?.['required']">
-                                        Brand Name is a required field!
-                                    </p>
-                                </div>
-                            </div> -->
-                            <div class="mb-3 form-group">
-                                <label for="brandName" class="form-label">Brand Name</label>
-                                <input type="text" class="form-control" placeholder="Enter Brand Name" name="brandName"
-                                    id="brandName"
-                                    [ngClass]="{'is-invalid': brandName.errors && brandName.touched, 'is-valid': !brandName.errors && brandName.touched}"
-                                    #brandName="ngModel" ngModel required value="{{product?.brandName}}">
-                                <div *ngIf="brandName.touched">
-                                    <p class="form-text text-danger" *ngIf="brandName.errors?.['required']">
-                                        Brand Name is a required field!
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-end">
-                            <button type="submit" class="btn btn-primary btn-sm"
-                                [ngClass]="{'disbaled': (inProgress || name.errors?.['required'] || category.errors?.['required']) && btnDisable}"
-                                login-btn>
-                                <span class="d-flex align-items-center ">
-                                    <span class="spinner spinner-grow spinner-grow-sm"
-                                        [class]="inProgress ? 'd-block' : 'd-none'"></span>
-                                    <i class="bi bi-pencil" [class]="inProgress ? 'd-none' : 'd-block'"></i>
-                                    <span class="ps-2">Submit</span>
-                                </span>
-                            </button>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </ng-container>
         </div>
     </div>
 </div>

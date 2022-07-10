@@ -22,8 +22,9 @@ export class CartComponent implements OnInit {
   public isLoggedIn: boolean = false;
   public inProgress = false;
   public wishlist: Product[] = [];
-  public cart: Product[] = [];
+  public cart: any[] = [];
   public search: string = "";
+  public products: Product[] = [];
 
   constructor(private _authService: AuthenticationsService, private _cartService: CartService, private _wishlistService: WishlistService, private router: Router, private _activeRouter: ActivatedRoute) {
     this.fetchProducts();
@@ -35,10 +36,10 @@ export class CartComponent implements OnInit {
     this._activeRouter.params.subscribe((pages: any) => { this.getPathVariables(pages) });
     this._authService.localAuthnticate(this._authService.getUserToken()).then(
       (data: any) => {
-        if (data.status == "error" || data.user.acctype != "user") {
+        if (data.status == "error") { //  || data.user.acctype != "user"
           this.router.navigate(['/dashboard']);
         }
-        this.cart = data.cart.products
+        this.wishlist = data.user.wishlist;
       }
     )
     this.isLoggedIn = this._authService.isLoggedIn();
@@ -48,8 +49,14 @@ export class CartComponent implements OnInit {
     this._cartService.getProducts().subscribe(
       (data: any) => {
         if (data.status == "success") {
-          this.cart = data.products;
+          this.cart = data.cart;
+          this.cart.map((prd: Product) => {
+            this.products.push(prd);
+          })
+          // this.products.push(cart.)
         }
+      }, (err: HttpErrorResponse) => {
+        
       }
     );
   }
@@ -69,7 +76,7 @@ export class CartComponent implements OnInit {
     this._cartService.getProducts().subscribe(
       (data: any) => {
         if (data.status == "success") {
-          this.cart = data.products;
+          this.cart = data.cart;
         }
         this.inProgress = false;
       },
@@ -85,8 +92,8 @@ export class CartComponent implements OnInit {
         if (!this.router.url.includes('dashboard')) {
           this.router.navigate(['/dashboard']);
         }
-        this.wishlist = data.wishlist.pids;
-        this.cart = data.cart.pids;
+        this.wishlist = data.user.wishlist;
+        this.cart = data.user.cart;
         this.isLoggedIn = this._authService.isLoggedIn();
       }
     })
@@ -101,14 +108,16 @@ export class CartComponent implements OnInit {
     if (!this.inWishlist(id)) {
       method = "add";
     }
+    this.inProgress = true;
     this._wishlistService.modifyWishlist(id, method).subscribe(
       (data) => {
         if (data.status == "success") {
           alert(data.msg);
           this.refreshUser();
-          this.loadProducts();
+          // this.loadProducts();
+          this.inProgress = false;
           setTimeout(() => {
-            location.href = "./dashboard/wishlist";
+            location.href = "./dashboard/cart";
           }, 500);
         } else {
           console.log(data);
@@ -119,14 +128,12 @@ export class CartComponent implements OnInit {
     );
   }
 
-  modifyCart(id: any) {
-    let method = "remove";
-    let max, count;
-    if (!this.inCart(id)) {
-      method = "add";
+  modifyCart(id: any, method: string) {
+    let max!: number, count!: number;
+    if (method == 'update') {
       let countInp: any = document.getElementById(`itemsCount_${id}`);
-      count = countInp.value;
-      max = countInp.attributes.max;
+      count = parseInt(countInp.value);
+      max = parseInt(countInp.attributes.max.value);
       if (count < 0) {
         alert(count + " items cannot be added!");
         return 0;
@@ -135,12 +142,14 @@ export class CartComponent implements OnInit {
         return 0;
       }
     }
+    this.inProgress = true;
     this._cartService.modifyCart(id, count, method).subscribe(
       (data) => {
         if (data.status == "success") {
           alert(data.msg);
           this.refreshUser();
-          this.loadProducts();
+          // this.loadProducts();
+          this.inProgress = false;
           setTimeout(() => {
             location.href = "./dashboard/cart";
           }, 100);
@@ -157,9 +166,9 @@ export class CartComponent implements OnInit {
   inCart(id: any): boolean {
     return (this.cart.indexOf(id) != -1);
   }
-  
+
   openProductDetails(e: any, bid: any) {
-    if (e.target.nodeName != 'BUTTON') {
+    if (e.target.attributes.skiproute == undefined) {
       if (this.isLoggedIn) {
         this.router.navigate(['dashboard', 'products', bid]);
       } else {
@@ -174,6 +183,10 @@ export class CartComponent implements OnInit {
     } else {
       alert("Login To Order!");
     }
+  }
+  
+  truncate(input: string, length: number) {
+    return input.length > length ? `${input.substring(0, length)}...` : input;
   }
 
 }

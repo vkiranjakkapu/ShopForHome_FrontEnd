@@ -15,6 +15,7 @@ export class OrderService {
   constructor(private _authService: AuthenticationsService, private http: HttpClient) { }
 
   placeOrder(data: any): Observable<any> {
+    data.token = this._authService.getUserToken().token;
     return this.http.post<any>(`${this.url}/orders/`, data);
   }
 

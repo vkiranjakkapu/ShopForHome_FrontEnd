@@ -14,7 +14,7 @@ import { ProductsService } from '../Services/products.service';
 export class ManageproductsComponent implements OnInit {
 
   public thisPage: string = "Store Books";
-  public records: number[] = [8, 12, 16, 20, 24];
+  public records: number[] = [6, 9, 18, 27, 36, 45];
   public perPage: number = this.records[0];
   public page = 1;
 
@@ -27,9 +27,10 @@ export class ManageproductsComponent implements OnInit {
   alerts: { status: string, msg: string, for: string } = { status: "none", msg: "", for: "" };
   public distinctBrands: Product[] = [];
   public productsList: Product[] = [];
+  public categoryList: string[] = [];
 
   public modalTitle!: string;
-  public product: Product | undefined;
+  public product!: Product;
   public search: string = "";
   public type: String = "create";
 
@@ -39,13 +40,18 @@ export class ManageproductsComponent implements OnInit {
   public message = '';
   public fileInfos!: Observable<any>;
 
+  public sortType: string = "";
+  public sortBy: string = "price";
+  public sortCategory: string = "";
+  public sortReverse: boolean = true;
+
   constructor(private _authService: AuthenticationsService, private _productsService: ProductsService, private router: Router, private _activeRouter: ActivatedRoute) {
-    this.fetchProducts();
+    this.loadProducts();
     _activeRouter.params.subscribe((pages: any) => { this.getPathVariables(pages) });
   }
 
   ngOnInit(): void {
-    this.fetchProducts();
+    this.loadProducts();
     this._activeRouter.params.subscribe((pages: any) => { this.getPathVariables(pages) });
     if (this._authService.isLoggedIn()) {
       if (this._authService.getCurrentUser()?.acctype !== "admin") {
@@ -55,14 +61,17 @@ export class ManageproductsComponent implements OnInit {
     this.isLoggedIn = this._authService.isLoggedIn();
   }
 
-  fetchProducts() {
-    this._productsService.getProducts().subscribe(
-      (data: any) => {
-        if (data.status == "success") {
-          this.productsList = data.products;
-        }
-      }
-    );
+  sortProducts(type: string) {
+    this.sortType = type;
+    this.sortReverse = !this.sortReverse;
+  }
+
+  sortByCategory(e: any) {
+    let type = e.target.value;
+    if (type != this.sortCategory) {
+      this.sortCategory = type;
+      this.loadProducts();
+    }
   }
 
   selectPage(page: string) {
@@ -96,6 +105,16 @@ export class ManageproductsComponent implements OnInit {
       (data: any) => {
         if (data.status == "success") {
           this.productsList = data.products;
+          if (this.sortCategory != '') {
+            let sorted: Product[] = [];
+            this.productsList.map((prd: Product) => {
+              if (prd.category == this.sortCategory) {
+                sorted.push(prd);
+              }
+            });
+            this.productsList = sorted;
+          }
+          this.loadCatogaries();
         }
         this.inProgress = false;
       },
@@ -103,6 +122,13 @@ export class ManageproductsComponent implements OnInit {
         this.inProgress = false;
       }
     )
+  }
+
+  loadCatogaries() {
+    this.productsList.map((prd: Product) => {
+      this.categoryList.push(prd.category);
+    });
+    this.categoryList = [...new Set(this.categoryList)];
   }
 
   setProductData(type: any, id: number, e: any) {
@@ -122,15 +148,14 @@ export class ManageproductsComponent implements OnInit {
     this.inProgress = true;
     this.alerts.for = "create";
     this.product = new Product(this.productsList.length + 1, data.prdname, data.prdimage, data.prdprice, data.prdstock, data.prdcategory, data.prdbrandName);
-    console.log(this.product);
-
     this._productsService.createProduct(this.product).subscribe(
       (data: any) => {
-        console.log(data);
-        
         if (data.status == "success") {
           this.product = data.product;
           this.getProducts();
+          setTimeout(() => {
+            location.href = "dashboard/manageproducts";;
+          }, 1000);
         }
         this.alerts.msg = data.msg;
         this.alerts.status = data.status;
@@ -159,37 +184,23 @@ export class ManageproductsComponent implements OnInit {
     this.inProgress = false;
   }
 
-  getBrandNames() {
-    this.inProgress = true;
-    this._productsService.getBrandNames().subscribe(
-      (data: any) => {
-        if (data.status == "success") {
-          this.distinctBrands = data.products;
-        }
-      },
-      (err: HttpErrorResponse) => {
-        console.log(err);
-      }
-    );
-    this.inProgress = false;
-  }
-
   updateProduct(data: any) {
     this.inProgress = true;
     this.alerts.for = "update";
-
-    console.log(data);
-    
     this.product = new Product(this.product?.pid, data?.name, data?.image, data?.price, data?.stock, data?.category, data?.brandName);
-
     this._productsService.updateProduct(this.product).subscribe(
       (data: any) => {
         if (data.status == "success") {
           this.getProducts();
           alert(data.msg);
+          setTimeout(() => {
+            location.href = "dashboard/manageproducts";
+          }, 1000);
         }
+        this.inProgress = false;
       },
       (err: any) => {
+        this.inProgress = false;
       }
     )
     this.inProgress = false;
@@ -222,6 +233,15 @@ export class ManageproductsComponent implements OnInit {
       (data: any) => {
         if (data.status == "success") {
           this.productsList = data.products;
+          if (this.sortCategory != '') {
+            let sorted: Product[] = [];
+            this.productsList.map((prd: Product) => {
+              if (prd.category == this.sortCategory) {
+                sorted.push(prd);
+              }
+            });
+            this.productsList = sorted;
+          }
         }
         this.inProgress = false;
       },
@@ -231,30 +251,18 @@ export class ManageproductsComponent implements OnInit {
     )
   }
 
-  // modifyWishlist(id: any) {
-  //   this._productsService.modifyWishlist(id);
-  // }
-
-  // inWishlist(id: any): boolean {
-  //   return this._productsService.inWishlist(id);
-  // }
-
-  // modifyCart(id: any) {
-  //   this._productsService.modifyCart(id);
-  // }
-
-  // inCart(id: any): boolean {
-  //   return this._productsService.inCart(id);
-  // }
-
   openProductDetails(e: any, bid: any) {
-    if (e.target.nodeName != 'BUTTON') {
+    if (e.target.attributes.skiproute == undefined) {
       if (this.isLoggedIn) {
         this.router.navigate(['dashboard', 'products', bid]);
       } else {
         this.router.navigate(['products', bid]);
       }
     }
+  }
+
+  truncate(input: string, length: number) {
+    return input.length > length ? `${input.substring(0, length)}...` : input;
   }
 
 }

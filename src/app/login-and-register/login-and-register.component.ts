@@ -22,11 +22,11 @@ export class LoginAndRegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
-      name: ['Sainath', [Validators.required]],
-      email: ['sainath@gmail.com', [Validators.required, Validators.email, Validators.pattern("[A-Za-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]],
-      phone: ['9493660145', [Validators.required, Validators.pattern("[0-9]{10}$")]],
-      password: ['sainath', [Validators.required]],
-      cpass: ['sainath', [Validators.required]],
+      name: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email, Validators.pattern("[A-Za-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]],
+      phone: ['', [Validators.required, Validators.pattern("[0-9]{10}$")]],
+      password: ['', [Validators.required]],
+      cpass: ['', [Validators.required]],
     })
   }
 

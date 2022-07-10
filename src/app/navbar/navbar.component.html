@@ -22,10 +22,14 @@
             <a class="nav-link d-flex justify-content-center align-items-center" aria-current="page"
               routerLinkActive="active" routerLink="dashboard/manageproducts">Manage Products</a>
           </li>
+          <li class="nav-item" *ngIf="user?.acctype == 'admin'">
+            <a class="nav-link d-flex justify-content-center align-items-center" aria-current="page"
+              routerLinkActive="active" routerLink="dashboard/coupons">Manage Coupons</a>
+          </li>
           <li class="nav-item" *ngIf="user?.acctype == 'user'">
             <a class="nav-link d-flex justify-content-center align-items-center" aria-current="page"
               routerLinkActive="active" routerLink="dashboard/cart">
-              <i class="bi bi-cart-fill me-2"></i>Cart
+              <i class="bi bi-cart3 me-2"></i>Cart
               <span class="ms-2 badge bg-primary">{{ user?.cart?.length }}</span>
             </a>
           </li>
@@ -43,7 +47,36 @@
                 <i class="bi bi-person"></i><span class="ps-2">{{ user?.name }}</span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg-end p-0">
-                <li><button class="dropdown-item p-2" type="button" (click)="Logout()" logout-btn>Logout</button></li>
+                <li *ngIf="user?.acctype == 'user'">
+                  <a class="dropdown-item p-2" routerLink="dashboard/orders" routerLinkActive="active">
+                    <i class="bi bi-truck pe-2"></i>
+                    My Orders
+                  </a>
+                </li>
+                <li *ngIf="user?.acctype == 'user'">
+                  <a class="dropdown-item p-2" routerLink="dashboard/coupons" routerLinkActive="active">
+                    <i class="bi bi-gift pe-2"></i>
+                    Coupons
+                  </a>
+                </li>
+                <li *ngIf="user?.acctype == 'admin'">
+                  <a class="dropdown-item p-2" routerLink="dashboard/wishlist" routerLinkActive="active">
+                    <i class="bi bi-heart pe-2"></i>
+                    Wishlist<span class="ms-2 badge bg-primary">{{ user?.wishlist?.length }}</span>
+                  </a>
+                </li>
+                <li *ngIf="user?.acctype == 'admin'">
+                  <a class="dropdown-item p-2" routerLink="dashboard/cart" routerLinkActive="active">
+                    <i class="bi bi-cart3 pe-2"></i>
+                    Cart<span class="ms-2 badge bg-primary">{{ user?.cart?.length }}</span>
+                  </a>
+                </li>
+                <li>
+                  <button class="dropdown-item p-2" type="button" (click)="Logout()" logout-btn>
+                    <i class="bi bi-box-arrow-left pe-2"></i>
+                    Logout
+                  </button>
+                </li>
               </ul>
             </div>
           </li>

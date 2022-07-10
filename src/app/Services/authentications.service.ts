@@ -82,9 +82,10 @@ export class AuthenticationsService extends Data {
         (data: any) => {
           if (data.status == "success") {
             let newUser = data.user;
-            this.authenticateUser({ "id": newUser.id, "email": newUser.email, "password": newUser.password });
-            AuthenticationsService.LoggedIn = true;
-            resolve(data);
+            this.authenticateUser({ "id": newUser.id, "email": newUser.email, "password": newUser.password }).then((resp: any) => {
+              AuthenticationsService.LoggedIn = true;
+              resolve(data);
+            });
           } else {
             AuthenticationsService.LoggedIn = false;
             reject(data);

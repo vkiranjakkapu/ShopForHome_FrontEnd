@@ -1,81 +1,105 @@
 <h1 class="text-center text-theme-primary">{{ thisPage }}</h1>
 <hr>
 <div class="container-fluid px-0">
-    <div class="row mx-2">
-        <div class="col-3 d-flex align-items-center">
-            <div class="d-flex justify-content-start align-items-center w-100">
+    <div class="row">
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xsm-12 d-flex align-items-center">
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xsm-12 d-flex align-items-center">
+            <div class="d-flex justify-content-center align-items-center w-100">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                    <input type="search" name="search" id="search" class="form-control border-start-0 ps-0"
+                        [(ngModel)]="search" (keyup)="searchProducts()" placeholder="Search Products Here">
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-xsm-12 d-flex align-items-center justify-content-end">
+            <div class="d-flex justify-content-end align-items-center w-100">
                 <label for="perpage">Show : &nbsp;</label>
                 <select name="perpage" class="form-control form-select w-25" id="perpage" [(ngModel)]="perPage">
                     <option *ngFor="let count of records" value="{{count}}">{{count}}</option>
                 </select>&nbsp; Products per page
             </div>
         </div>
-        <div class="col-3 d-flex align-items-center">
-            <div class="d-flex justify-content-center align-items-center w-100">
-                <div class="input-group">
-                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
-                    <input type="search" name="search" id="search" class="form-control border-start-0 ps-0" [(ngModel)]="search" (keyup)="searchProducts()" placeholder="Search Products Here">
-                </div>
-            </div>
-        </div>
-        <div class="col-3 d-flex align-items-center">
-            <div class="d-flex justify-content-center align-items-center w-100">
-                <label for="perpage">Sort By : &nbsp;</label>
-                <select name="perpage" class="form-control form-select w-75" id="perpage" (change)="sortProducts()" [(ngModel)]="sortType">
-                    <option value="" [selected]>-</option>
-                    <option value="asc">Price Low to High</option>
-                    <option value="desc">Price High to Low</option>
-                    <!-- <option *ngFor="let count of records" value="{{count}}">{{count}}</option> -->
-                </select>
-            </div>
-        </div>
-        <div class="col-3 d-flex align-items-center justify-content-end">
-            <div class="text-end">
-                <pagination-controls class="pagination" id="allProducts" [maxSize]="5" [autoHide]="true" [responsive]="true" previousLabel="" nextLabel="" (pageChange)="page = $event"></pagination-controls>
-            </div>
-        </div>
     </div>
     <hr>
 </div>
 <div class="container-fluid" [ngClass]="{'loading-effect': inProgress}" loading="Loading Products...">
-    <div class="alert alert-sm alert-info text-center mt-2" *ngIf="(productsList.length == 0)"><i class="bi bi-info-circle pe-2"></i>No Products in Database</div>
-    <div class="products-grid py-2" *ngIf="productsList.length > 0">
-        <div class="product" *ngFor="let prdct of productsList | orderBy: sortBy : sortReverse | paginate: { itemsPerPage: perPage, currentPage: page, id: 'allProducts' }" (click)="openProductDetails($event, prdct?.pid)">
-            <div class="product-header"><div class="img position-relative">
-                    <img src="{{ prdct?.image }}" alt="Dining Table" class="w-100">
-                    <div class="wishlist btn-group btn-group-vertical d-flex align-items-center justify-content-center" [ngClass]="{'active' : inWishlist(prdct?.pid)}" *ngIf="isLoggedIn">
-                        <button class="btn btn-sm d-flex align-items-center justify-content-center" (click)="modifyWishlist(prdct?.pid)" skiproute>
-                            <i title="Add to Wishlist" class="bi bi-heart" [ngClass]="{'d-none' : inWishlist(prdct?.pid)}"></i>
-                            <i title="Remove from Wishlist" class="bi bi-heart-fill" [ngClass]="{'d-none' : !inWishlist(prdct?.pid)}"></i>
-                        </button>
-                    </div>
-                </div>
+    <div class="row">
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xsm-12">
+            <h4 class="text-secondary mb-0">Filters</h4>
+            <hr>
+            <label for="search">Search Products Here</label><br>
+            <div class="input-group mt-2">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                <input type="search" name="search" id="search" class="form-control border-start-0 ps-0"
+                    [(ngModel)]="search" (keyup)="searchProducts()" placeholder="Search Products Here">
             </div>
-            <div class="product-body p-2">
-                <p>
-                    <span class="fw-bold text-theme-secondary price">&#8377; {{ prdct?.price }} <small class="text-secondary"><s>&nbsp;xxxxx&nbsp;</s></small></span><br>
-                    <small class="text-savesoil-primary fw-bold">50% Off</small><br>
-                    <span><small class="text-muted fw-bold">{{ prdct?.brandName }}</small></span><br>
-                    <span class="title">{{ prdct?.name }}</span>
-                </p>
-                <div class="text-center">
-                    <div class="input-group w-100 d-flex justify-content-center">
-                        <button class="input-group-text bg-primary text-white border-primary" *ngIf="!inCart(prdct?.pid)" skiproute>
-                            <i class="bi bi-plus-circle pe-none"></i>
-                        </button>
-                        <input type="number" name="itemsCount" id="itemsCount_{{ prdct?.pid }}" max="{{ prdct?.stock }}" min="1" style="width: 2ch;" value="1" class="form-control" required *ngIf="!inCart(prdct?.pid)" skiproute>
-                        <button class="text-capitalize input-group-text btn btn-primary" *ngIf="!inCart(prdct?.pid)" (click)="modifyCart(prdct?.pid)" skiproute>
-                            into
-                            <i class="bi bi-cart pe-1 pe-none"></i>
-                        </button>
-                        <button class="input-group-text btn btn-warning" *ngIf="inCart(prdct?.pid)" (click)="modifyCart(prdct?.pid)" skiproute>
-                            <i class="bi bi-cart pe-2"></i>
-                            Remove From Item
-                        </button>
-                        <button class="input-group-text btn btn-success bg-theme-savesoil-primary" (click)="orderPage(prdct?.pid)" skiproute>
-                            <i class="bi bi-truck pe-1 pe-none"></i>
-                            Order
-                        </button>
+            <hr>
+            <label for="priceSort">Sort By Price</label><br>
+            <select name="priceSort" class="form-control mt-2 form-select" id="priceSort" (change)="sortProducts('price')">
+                <option value="{{ sortBy }}" [selected]>Price Sort</option>
+                <option value="asc">Price Low to High</option>
+                <option value="desc">Price High to Low</option>
+            </select>
+            <hr>
+            <label for="catSort">Category Sort</label><br>
+            <select name="catSort" class="form-control mt-2 form-select" id="catSort" (change)="sortByCategory($event)">
+                <option value="">Category Sort</option>
+                <option value="{{bname}}" *ngFor="let bname of categoryList">{{ bname }}</option>
+            </select>
+            <hr>
+            <div class="text-center">
+                <pagination-controls class="pagination" id="allProducts" [maxSize]="5" [autoHide]="true"
+                    [responsive]="true" previousLabel="" nextLabel="" (pageChange)="page = $event">
+                </pagination-controls>
+            </div>
+        </div>
+        <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12 col-xsm-12">
+            <div class="alert alert-sm alert-info text-center mt-2" *ngIf="(productsList.length == 0)"><i class="bi bi-info-circle pe-2"></i>No Products in Database</div>
+            <div class="products-grid py-2" *ngIf="productsList.length > 0">
+                <div class="product" *ngFor="let prdct of productsList | orderBy: sortBy : sortReverse | paginate: { itemsPerPage: perPage, currentPage: page, id: 'allProducts' }" (click)="openProductDetails($event, prdct?.pid)">
+                    <div class="product-header"><div class="img position-relative">
+                            <img src="{{ prdct?.image }}" alt="{{ prdct?.image }}" class="w-100">
+                            <div class="wishlist btn-group btn-group-vertical d-flex align-items-center justify-content-center" [ngClass]="{'active' : inWishlist(prdct?.pid)}" *ngIf="isLoggedIn">
+                                <button class="btn btn-sm d-flex align-items-center justify-content-center" (click)="modifyWishlist(prdct?.pid)" skiproute>
+                                    <i title="Add to Wishlist" class="bi bi-heart" [ngClass]="{'d-none' : inWishlist(prdct?.pid)}"></i>
+                                    <i title="Remove from Wishlist" class="bi bi-heart-fill" [ngClass]="{'d-none' : !inWishlist(prdct?.pid)}"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-body p-2">
+                        <p>
+                            <span class="fw-bold text-theme-secondary price">&#8377; {{ prdct?.price }} <small class="text-secondary"><s>&nbsp;{{ (prdct?.price)*2 }}&nbsp;</s></small></span><br>
+                            <small class="text-success fw-bold">50% Off</small><br>
+                            <span><small class="text-muted fw-bold">{{ prdct?.brandName }}</small></span><br>
+                            <span><small class="text-muted fw-bold">{{ prdct?.category }}</small></span><br>
+                            <span class="title">
+                                {{ truncate(prdct?.name, 80) }}
+                            </span>
+                        </p>
+                        <div class="text-center">
+                            <div class="input-group w-100 d-flex justify-content-center" *ngIf="prdct.stock != 0">
+                                <button class="input-group-text bg-primary text-white border-primary" *ngIf="!inCart(prdct?.pid)" skiproute>
+                                    <i class="bi bi-plus-circle pe-none"></i>
+                                </button>
+                                <input type="number" name="itemsCount" id="itemsCount_{{ prdct?.pid }}" max="{{ prdct?.stock }}" min="1" style="width: 2ch;" value="1" class="form-control" required *ngIf="!inCart(prdct?.pid)" skiproute>
+                                <button class="text-capitalize input-group-text btn btn-primary" *ngIf="!inCart(prdct?.pid)" (click)="modifyCart(prdct?.pid)" skiproute>
+                                    into
+                                    <i class="bi bi-cart pe-1 pe-none"></i>
+                                </button>
+                                <a class="input-group-text btn btn-primary" *ngIf="inCart(prdct?.pid)" href="dashboard/cart" skiproute> <!--  (click)="modifyCart(prdct?.pid)" -->
+                                    <i class="bi bi-cart-plus pe-2"></i>
+                                    Show In Cart
+                                </a>
+                                <button class="input-group-text btn btn-success" (click)="orderPage(prdct?.pid)" [disabled]="prdct.stock == 0" skiproute>
+                                    <i class="bi bi-truck pe-1 pe-none"></i>
+                                    Order
+                                </button>
+                            </div>
+                            <span class="text-danger" *ngIf="prdct.stock == 0">Out Of Stock!</span>
+                        </div>
                     </div>
                 </div>
             </div>

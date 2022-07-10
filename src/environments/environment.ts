@@ -4,9 +4,7 @@
 
 export const environment = {
   production: false,
-  masterServiceURL: "http://localhost:8080/masterservice/api",
-  couponServiceURL: "http://localhost:8081/couponservice/api",
-  reportsServiceURL: "http://localhost:8082/reports/api",
+  masterServiceURL: "http://localhost:8080/masterservice/api"
 };
 
 /*

@@ -14,12 +14,12 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import {HttpClientModule} from '@angular/common/http';
 import { ProductsService } from './Services/products.service';
 import { UsersService } from './Services/users.service';
-import { CartComponent } from './cart/cart.component';
 import { CartService } from './Services/cart.service';
 import { WishlistService } from './Services/wishlist.service';
 import { OrderService } from './Services/order.service';
-import { OrdersComponent } from './orders/orders.component';
 import { Ng2OrderModule, Ng2OrderPipe } from 'ng2-order-pipe';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { CouponService } from './Services/coupon.service';
 
 @NgModule({
   declarations: [
@@ -37,9 +37,10 @@ import { Ng2OrderModule, Ng2OrderPipe } from 'ng2-order-pipe';
     NgxPaginationModule,
     ReactiveFormsModule,
     HttpClientModule,
-    Ng2OrderModule
+    Ng2OrderModule,
+    Ng2SearchPipeModule
   ],
-  providers: [AuthenticationsService, ProductsService, UsersService, CartService, WishlistService, OrderService, BookService, Window],
+  providers: [AuthenticationsService, ProductsService, CouponService, UsersService, CartService, WishlistService, OrderService, BookService, Window],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
