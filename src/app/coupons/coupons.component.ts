@@ -44,6 +44,7 @@ export class CouponsComponent implements OnInit {
       }
     )
     this.fetchCoupons();
+    this.inProgress = false;
   }
 
   selectPage(page: string) {

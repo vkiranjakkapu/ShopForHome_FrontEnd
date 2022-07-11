@@ -13,7 +13,7 @@ import { ProductsService } from '../Services/products.service';
 })
 export class ManageproductsComponent implements OnInit {
 
-  public thisPage: string = "Store Books";
+  public thisPage: string = "Products From Store";
   public records: number[] = [6, 9, 18, 27, 36, 45];
   public perPage: number = this.records[0];
   public page = 1;

@@ -14,7 +14,7 @@
     </div>
     <hr>
 </div>
-<ng-container *ngIf="coupons" [ngClass]="{'loading-effect': inProgress}" loading="Loading Coupons...">
+<ng-container *ngIf="coupons && cpnUsers" [ngClass]="{'loading-effect': inProgress}" loading="Loading Coupons...">
     <div class="conatiner-fluid">
         <div class="alert alert-info text-center" *ngIf="coupons.length == 0">
             <i class="bi bi-gift pe-2"></i>

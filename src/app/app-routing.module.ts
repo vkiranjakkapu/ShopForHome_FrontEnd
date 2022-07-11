@@ -13,6 +13,7 @@ import { OrdersComponent } from './orders/orders.component';
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 import { ParticipantsComponent } from './participants/participants.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
+import { ReportsComponent } from './reports/reports.component';
 import { WishlistComponent } from './wishlist/wishlist.component';
 
 const routes: Routes = [
@@ -44,6 +45,8 @@ const routes: Routes = [
       }, {
         path: 'manageproducts', component: ManageproductsComponent
       }, {
+        path: 'reports', component: ReportsComponent
+      }, {
         path: 'participants', component: ParticipantsComponent
       }, {
         path: 'wishlist', component: WishlistComponent
@@ -68,4 +71,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
-export const viewComponents = [AllBooksComponent, CouponsComponent, AllProductsComponent, OrdersComponent, CartComponent, ProductDetailsComponent, ManageproductsComponent, ParticipantsComponent, WishlistComponent, CompletedComponent, BookdetailsComponent, NotFoundComponent, DashboardComponent, PagenotfoundComponent];
+export const viewComponents = [AllBooksComponent, ReportsComponent, CouponsComponent, AllProductsComponent, OrdersComponent, CartComponent, ProductDetailsComponent, ManageproductsComponent, ParticipantsComponent, WishlistComponent, CompletedComponent, BookdetailsComponent, NotFoundComponent, DashboardComponent, PagenotfoundComponent];

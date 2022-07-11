@@ -20,6 +20,7 @@ import { OrderService } from './Services/order.service';
 import { Ng2OrderModule, Ng2OrderPipe } from 'ng2-order-pipe';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { CouponService } from './Services/coupon.service';
+import { ReportsService } from './Services/reports.service';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,7 @@ import { CouponService } from './Services/coupon.service';
     Ng2OrderModule,
     Ng2SearchPipeModule
   ],
-  providers: [AuthenticationsService, ProductsService, CouponService, UsersService, CartService, WishlistService, OrderService, BookService, Window],
+  providers: [AuthenticationsService, ReportsService, ProductsService, CouponService, UsersService, CartService, WishlistService, OrderService, BookService, Window],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
