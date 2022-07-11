@@ -29,13 +29,13 @@
         <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xsm-12">
             <h4 class="text-secondary mb-0">Filters</h4>
             <hr>
-            <label for="search">Search Products Here</label><br>
+            <!-- <label for="search">Search Products Here</label><br>
             <div class="input-group mt-2">
                 <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
                 <input type="search" name="search" id="search" class="form-control border-start-0 ps-0"
                     [(ngModel)]="search" (keyup)="searchProducts()" placeholder="Search Products Here">
             </div>
-            <hr>
+            <hr> -->
             <label for="priceSort">Sort By Price</label><br>
             <select name="priceSort" class="form-control mt-2 form-select" id="priceSort" (change)="sortProducts('price')">
                 <option value="{{ sortBy }}" [selected]>Price Sort</option>

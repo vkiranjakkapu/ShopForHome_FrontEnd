@@ -16,4 +16,13 @@ export class CouponService {
   public getCoupons(): Observable<any> {
     return this.http.get<any>(`${this.url}/${this._authService.getUserToken().token}`);
   }
+
+  public createCoupon(inp: any): Observable<any> {
+    let data: FormData = new FormData();
+    data.append("token", this._authService.getUserToken().token);
+    data.append("type", inp.type);
+    data.append("expireDays", inp.expireDays);
+    data.append("offprice", inp.offprice);
+    return this.http.post<any>(`${this.url}/`, data);
+  }
 }

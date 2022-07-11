@@ -1,74 +1,118 @@
+<h2 class="text-center text-theme-secondary mb-0">Coupons & Offers</h2>
 <hr>
 <div class="d-flex justify-content-between align-items-center">
-    <h2 class="text-center text-theme-secondary mb-0">Coupons & Offers</h2>
     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#couponModal">
         <i class="bi bi-gift pe-2"></i>
         Create Coupon
     </button>
+    <div class="">
+        <pagination-controls class="pagination" id="allCoupons" [maxSize]="5" [autoHide]="true"
+            [responsive]="true" previousLabel="" nextLabel="" (pageChange)="page = $event">
+        </pagination-controls>
+    </div>
 </div>
 <hr>
-<div class="conatiner-fluid">
-    <table class="table table-stripped table-bordered table-hover w-75 mx-auto">
-        <tbody>
-            <tr>
-                <th>#</th>
-                <th>Coupon Code</th>
-                <th>Offer Price</th>
-                <th>Valid Upto</th>
-                <th>Validity</th>
-            </tr>
-        </tbody>
-        <tbody>
-            <tr *ngFor="let cpn of coupons | paginate: { itemsPerPage: perPage, currentPage: page, id: 'allProducts' }; let i=index">
-                <td>{{ i }}</td>
-                <td>{{ cpn.code }}</td>
-                <td>&#8377; {{ cpn.offprice }} /-</td>
-                <td>{{ cpn.expire }}</td>
-                <td>
-                    {{dateExpired(cpn.expire)}}
-                    <span class="text-danger" *ngIf="dateExpired(cpn.expire) || cpn.validity == 0">Coupon Expired</span>
-                    <span class="text-success" *ngIf="!(dateExpired(cpn.expire) || cpn.validity == 0)">Unused Coupon</span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<ng-container *ngIf="coupons" [ngClass]="{'loading-effect': inProgress}" loading="Loading Coupons...">
+    <div class="conatiner-fluid">
+        <div class="alert alert-info text-center" *ngIf="coupons.length == 0">
+            <i class="bi bi-gift pe-2"></i>
+            No Coupons Found!
+        </div>
+        <table class="table table-stripped table-bordered table-hover mx-auto" *ngIf="coupons.length > 0">
+            <tbody>
+                <tr>
+                    <th>#</th>
+                    <th *ngIf="curUser.acctype == 'admin'">For</th>
+                    <th>Coupon Code</th>
+                    <th>Offer Price</th>
+                    <th>Valid Upto</th>
+                    <th>Validity</th>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr *ngFor="let cpn of coupons | paginate: { itemsPerPage: perPage, currentPage: page, id: 'allCoupons' }; let i=index">
+                    <td>{{ i+1 }}</td>
+                    <td *ngIf="curUser.acctype == 'admin'">{{ cpnUsers[i].name+" ("+cpnUsers[i].acctype+")" }}</td>
+                    <td>{{ cpn.code }}</td>
+                    <td>&#8377; {{ cpn.offprice }} /-</td>
+                    <td>
+                        {{
+                        convertDate(cpn.expire).getDate()+"-"+convertDate(cpn.expire).getMonth()+"-"+convertDate(cpn.expire).getFullYear()
+                        }}
+                    </td>
+                    <td>
+                        <span class="text-danger" *ngIf="dateExpired(cpn.expire)">Coupon Expired</span>
+                        <span class="text-danger" *ngIf="cpn.validity == 0">Coupon Used</span>
+                        <span class="text-success" *ngIf="(!dateExpired(cpn.expire) && cpn.validity == 1)">Unused
+                            Coupon</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</ng-container>
 <div class="modal fade" id="couponModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title mb-0" id="exampleModalLabel">Create Coupon</h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="">
+            <form #couponForm="ngForm" (ngSubmit)="createCoupon(couponForm.value)">
+                <div class="modal-header">
+                    <h2 class="modal-title mb-0" id="exampleModalLabel">Create Coupon</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div reg-alert class="alert alert-sm p-2 text-capitalize" [ngClass]="{'d-none': (alerts.status == 'none'), 'alert-success': (alerts.status == 'success'), 'alert-danger': (alerts.status == 'error')}">
+                        <i class="bi bi-exclamation-circle-fill pe-2" *ngIf="(alerts.status == 'error')"></i>
+                        <i class="bi bi-check-circle-fill pe-2" *ngIf="(alerts.status == 'success')"></i>
+                        {{ alerts.msg }}
+                    </div>
                     <div class="input-group">
-                        <label for="for" class="input-group-text bg-white border-end-0"><i class="bi bi-person pe-2"></i>For : </label>
-                        <select name="for" id="for" class="form-select border-start-0">
+                        <label for="type" class="input-group-text bg-white border-end-0"><i
+                                class="bi bi-person pe-2"></i>For : </label>
+                        <select name="type" id="type" class="form-select border-start-0" #type="ngModel" ngModel required>
                             <option value="">-</option>
                             <option value="user">Users</option>
                             <option value="admin">Admin</option>
                         </select>
                     </div>
-                    <br>
-                    <div class="input-group">
-                        <label for="expireDays" class="input-group-text border-end-0 bg-white"><i class="bi bi-calendar-event pe-2"></i>Days</label>
-                        <input type="number" name="expireDays" id="expireDays" placeholder="No. Of Days From Today" min="0" class="form-control border-start-0">
+                    <div *ngIf="type.touched">
+                        <p class="form-text text-danger" *ngIf="type.errors?.['required']">
+                            User Type is a required field!
+                        </p>
                     </div>
                     <br>
                     <div class="input-group">
-                        <label for="offPrice" class="input-group-text border-end-0 bg-white"><i class="bi bi-percent pe-2"></i>Price</label>
-                        <input type="number" name="offPrice" id="offPrice" placeholder="Offer Price" min="0" class="form-control border-start-0">
+                        <label for="expireDays" class="input-group-text border-end-0 bg-white"><i
+                                class="bi bi-calendar-event pe-2"></i>Days</label>
+                        <input type="number" name="expireDays" id="expireDays" placeholder="No. Of Days From Today"
+                            min="0" class="form-control border-start-0" #expireDays="ngModel" ngModel required>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary">
-                    <span class="spinner spinner-border spinner-border-sm pe-2" *ngIf="inProgress"></span>
-                    <i class="bi bi-percent pe-2" *ngIf="!inProgress"></i>
-                    Create
-                </button>
-            </div>
+                    <div *ngIf="expireDays.touched">
+                        <p class="form-text text-danger" *ngIf="expireDays.errors?.['required']">
+                            Validity Days is a required field!
+                        </p>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <label for="offPrice" class="input-group-text border-end-0 bg-white"><i
+                                class="bi bi-percent pe-2"></i>Price</label>
+                        <input type="number" name="offprice" id="offPrice" placeholder="Offer Price" min="0"
+                            class="form-control border-start-0" #price="ngModel" ngModel required>
+                    </div>
+                    <div *ngIf="price.touched">
+                        <p class="form-text text-danger" *ngIf="price.errors?.['required']">
+                            % Price is a required field!
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"
+                        [disabled]="(inProgress || type.errors?.['required'] || price.errors?.['required'] || expireDays.errors?.['required'])">
+                        <span class="spinner spinner-border spinner-border-sm pe-2" *ngIf="inProgress"></span>
+                        <i class="bi bi-percent pe-2" *ngIf="!inProgress"></i>
+                        Create
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
