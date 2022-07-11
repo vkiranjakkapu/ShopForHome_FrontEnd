@@ -56,6 +56,7 @@ export class OrdersComponent implements OnInit {
     if (pathVars.itemsCount != undefined) {
       this.itemsCount = pathVars.itemsCount;
     }
+    this.evaluateFinalPrice();
   }
 
   refreshLogin() {
@@ -80,7 +81,7 @@ export class OrdersComponent implements OnInit {
       (data: any) => {
         if (data.status == "success") {
           this.product = data.product;
-          this.finalPrice = this.product.price;
+          this.finalPrice = this.product.price * this.itemsCount;
         } else {
           console.log(data);
         }

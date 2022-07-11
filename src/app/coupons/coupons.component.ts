@@ -30,6 +30,7 @@ export class CouponsComponent implements OnInit {
   constructor(private _authService: AuthenticationsService, private _usersService: UsersService, private _couponsServcice: CouponService, private router: Router) { }
 
   ngOnInit(): void {
+    this.inProgress = true;
     if (this._authService.getUserToken() == null) {
       location.href = '.';
     }

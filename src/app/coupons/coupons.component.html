@@ -1,17 +1,19 @@
 <h2 class="text-center text-theme-secondary mb-0">Coupons & Offers</h2>
 <hr>
-<div class="d-flex justify-content-between align-items-center">
-    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#couponModal">
-        <i class="bi bi-gift pe-2"></i>
-        Create Coupon
-    </button>
-    <div class="">
-        <pagination-controls class="pagination" id="allCoupons" [maxSize]="5" [autoHide]="true"
-            [responsive]="true" previousLabel="" nextLabel="" (pageChange)="page = $event">
-        </pagination-controls>
+<div class="" *ngIf="curUser.acctype == 'admin'">
+    <div class="d-flex justify-content-between align-items-center">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#couponModal">
+            <i class="bi bi-gift pe-2"></i>
+            Create Coupon
+        </button>
+        <div class="">
+            <pagination-controls class="pagination" id="allCoupons" [maxSize]="5" [autoHide]="true"
+                [responsive]="true" previousLabel="" nextLabel="" (pageChange)="page = $event">
+            </pagination-controls>
+        </div>
     </div>
+    <hr>
 </div>
-<hr>
 <ng-container *ngIf="coupons" [ngClass]="{'loading-effect': inProgress}" loading="Loading Coupons...">
     <div class="conatiner-fluid">
         <div class="alert alert-info text-center" *ngIf="coupons.length == 0">

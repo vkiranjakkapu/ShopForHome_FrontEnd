@@ -21,7 +21,7 @@
                     </span>
                     <span class="fw-bold form-text text-secondary my-2">{{ product?.brandName }}</span>
                     <span class="text-danger my-2" *ngIf="product.stock == 0">Out Of Stock!</span>
-                    <div class="input-group w-100 d-flex justify-content-center" *ngIf="product.stock != 0">
+                    <div class="input-group w-100 d-flex justify-content-center" *ngIf="product.stock != 0 && false">
                         <button class="input-group-text bg-primary text-white border-primary" *ngIf="!inCart(product?.pid)" skiproute>
                             <i class="bi bi-plus-circle pe-none"></i>
                         </button>

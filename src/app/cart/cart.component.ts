@@ -177,9 +177,9 @@ export class CartComponent implements OnInit {
     }
   }
 
-  orderPage(pid: any) {
+  orderPage(pid: any, count: number) {
     if (AuthenticationsService.LoggedIn) {
-      this.router.navigate(['dashboard', 'orders', pid])
+      this.router.navigate(['dashboard', 'orders', pid, count])
     } else {
       alert("Login To Order!");
     }

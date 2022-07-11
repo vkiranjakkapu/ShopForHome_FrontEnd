@@ -90,6 +90,7 @@ export class ManageproductsComponent implements OnInit {
       (data: any) => {
         if (data.status == "success") {
           this.getProducts();
+          this.loadProducts();
         }
         this.alerts.for = "bulkUpload";
         this.alerts.status = data.status;

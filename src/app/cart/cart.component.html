@@ -70,7 +70,7 @@
                             </div>
                             <hr data-content="OR">
                             <span class="text-danger" *ngIf="crt.product.stock == 0">Product Out of Stock!</span>
-                            <button class="btn btn-success w-100" (click)="orderPage(crt.product.pid)" [disabled]="crt.product.stock == 0">
+                            <button class="btn btn-success w-100" (click)="orderPage(crt.product.pid, crt.quantity)" [disabled]="crt.product.stock == 0">
                                 <i class="bi bi-truck pe-2"></i>
                                 Order ({{ crt.quantity }}) Items
                             </button>
