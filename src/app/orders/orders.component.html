@@ -79,7 +79,7 @@
                             <hr>
                             <div class="d-flex justify-content-between align-items-center">
                                 <span>Final Order Price:</span>
-                                <h2 class="text-success mb-0"> &#8377; {{ finalPrice }} /-</h2>
+                                <h2 class="text-success mb-0"> &#8377; {{ finalPrice }} <small class="text-primary" *ngIf="couponCode != '' && couponVerified && validCoupon"><s>{{ product.price * itemsCount }}</s></small></h2>
                             </div>
                             <hr class="mb-2">
                         </div>

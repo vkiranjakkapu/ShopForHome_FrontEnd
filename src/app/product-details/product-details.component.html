@@ -33,15 +33,24 @@
                                 <i class="bi bi-cart pe-1 pe-none"></i>
                             </button>
                             <a class="input-group-text btn btn-primary w-100" *ngIf="inCart(product?.pid)" href="dashboard/cart">
-                                <i class="bi bi-cart-plus pe-2"></i>
+                                <i class="bi bi-cart-plus pe-1"></i>
                                 Show In Cart
                             </a>
                         </div>
                         <hr>
-                        <button class="btn btn-primary w-100" *ngIf="!inWishlist(product.pid)" (click)="modifyWishlist(product?.pid)">Add to Wishlist</button>
-                        <button class="btn btn-danger w-100" *ngIf="inWishlist(product.pid)" (click)="modifyWishlist(product?.pid)">Remove From Wishlist</button>
+                        <button class="btn btn-primary w-100" *ngIf="!inWishlist(product.pid)" (click)="modifyWishlist(product?.pid)">
+                            <i class="bi bi-heart-fill pe-1"></i>
+                            Add to Wishlist
+                        </button>
+                        <button class="btn btn-danger w-100" *ngIf="inWishlist(product.pid)" (click)="modifyWishlist(product?.pid)">
+                            <i class="bi bi-heart-fill pe-1"></i>
+                            Remove From Wishlist
+                        </button>
                         <hr>
-                        <button class="btn btn-success w-100" (click)="orderPage(product?.pid)" [disabled]="product.stock == 0">Order Now</button>
+                        <button class="btn btn-success w-100" (click)="orderPage(product?.pid)" [disabled]="product.stock == 0">
+                            <i class="bi bi-truck pe-1"></i>
+                            Order Now
+                        </button>
                         <span class="text-danger" *ngIf="product.stock == 0">Out Of Stock!</span>
                     </div>
                 </div>
