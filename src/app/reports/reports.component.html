@@ -6,13 +6,13 @@
             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xsm-12 my-1">
                 <div class="d-flex align-items-center">
                     <label for="startDate">Start :&nbsp;&nbsp;</label>
-                    <input type="date" name="start" [max]="maxDate | date:'yyyy-MM-dd'" id="startDate" class="form-control w-75" required [(ngModel)]="startDate">
+                    <input type="date" name="start" [max]="endDate | date:'yyyy-MM-dd'" id="startDate" class="form-control w-75" required [(ngModel)]="startDate">
                 </div>
             </div>
             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xsm-12 my-1">
                 <div class="d-flex align-items-center">
                     <label for="endDate">End :&nbsp;&nbsp;</label>
-                    <input type="date" name="end" [min]="minDate | date:'yyyy-MM-dd'" id="endDate" class="form-control w-75" required [(ngModel)]="endDate">
+                    <input type="date" name="end" [min]="startDate | date:'yyyy-MM-dd'" id="endDate" class="form-control w-75" required [(ngModel)]="endDate">
                 </div>
             </div>
             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xsm-12 my-1">

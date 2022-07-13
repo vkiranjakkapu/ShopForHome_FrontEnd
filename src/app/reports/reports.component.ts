@@ -29,9 +29,6 @@ export class ReportsComponent implements OnInit {
   public sortCategory: string = "";
   public sortReverse: boolean = true;
 
-  public minDate: any;
-  public maxDate: any;
-
   constructor(private _reportsService: ReportsService, private _authService: AuthenticationsService, private router: Router) { }
 
   ngOnInit(): void {
@@ -49,8 +46,6 @@ export class ReportsComponent implements OnInit {
       }, (err: HttpErrorResponse) => { });
     }
     this.loadReports();
-    this.minDate = new Date();
-    this.maxDate = new Date();
   }
 
   loadReports() {
