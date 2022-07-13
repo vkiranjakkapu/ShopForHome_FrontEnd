@@ -29,6 +29,7 @@ export class ProductDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this._activeRouter.params.subscribe((pages: any) => { this.getPathVariables(pages) });
+    this.refreshUser();
     this.fetchProduct();
   }
 
@@ -134,6 +135,16 @@ export class ProductDetailsComponent implements OnInit {
       alert("You Must Login to Order a Product!");
     } else {
       this.router.navigate(['dashboard', 'orders', this.product.pid]);
+    }
+  }
+
+  orderPage(pid: any) {
+    if (AuthenticationsService.LoggedIn) {
+      this.router.navigate(['dashboard', 'orders', pid])
+    } else if (this._authService.getUserToken() == null) {
+      alert("You Must Login to Order a Product!");
+    } else {
+      alert("Login To Order!");
     }
   }
 }

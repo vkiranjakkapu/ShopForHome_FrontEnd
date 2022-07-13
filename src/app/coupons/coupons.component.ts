@@ -23,14 +23,14 @@ export class CouponsComponent implements OnInit {
   public cpnUsers: any[] = [];
 
   public inProgress: boolean = false;
+  public createInProgress: boolean = false;
   alerts: { status: string, msg: string, for: string } = { status: "none", msg: "", for: "" };
-  
+
   public curUser!: User;
 
   constructor(private _authService: AuthenticationsService, private _usersService: UsersService, private _couponsServcice: CouponService, private router: Router) { }
 
   ngOnInit(): void {
-    this.inProgress = true;
     if (this._authService.getUserToken() == null) {
       location.href = '.';
     }
@@ -41,10 +41,8 @@ export class CouponsComponent implements OnInit {
         } else {
           this.curUser = data.user;
         }
-      }
-    )
+      }, (err: HttpErrorResponse) => { });
     this.fetchCoupons();
-    this.inProgress = false;
   }
 
   selectPage(page: string) {
@@ -55,32 +53,23 @@ export class CouponsComponent implements OnInit {
     this.inProgress = true;
     this._couponsServcice.getCoupons().subscribe((data: any) => {
       this.coupons = data.coupons;
-      for (let inx = 0; inx < this.coupons.length; inx++) {
-        const userId: number = this.coupons[inx].uid;
-        this._usersService.getUserById(userId).subscribe((resp: any) => {
-          this.cpnUsers.push(resp.user);
-        }, (err: HttpErrorResponse) => {
-          
-        });
-      }
       this.inProgress = false;
     }, (err: HttpErrorResponse) => {
       console.log(err);
       this.inProgress = false;
     });
   }
-  
-  async fetchUser(uid: number) {
-    this.inProgress = true;
-    let resp = new Promise((resolve, rejct) => {
-      this._usersService.getUserById(uid).subscribe((resp: any) => {
-        resolve(resp.user)
-      }, (err: HttpErrorResponse) => {
-        
-      });
-    });
-    this.inProgress = false;
-    return await resp;
+
+  createCoupon(data: any) {
+    this.createInProgress = true;
+    this._couponsServcice.createCoupon(data).subscribe((data: any) => {
+      if (data.status == "success") {
+        this.alerts.status = data.status;
+        this.alerts.msg = data.msg;
+        this.createInProgress = false;
+        this.fetchCoupons();
+      }
+    }, (err: HttpErrorResponse) => { this.createInProgress = false })
   }
 
   convertDate(date: any): Date {
@@ -98,20 +87,5 @@ export class CouponsComponent implements OnInit {
     const today = new Date();
     var expire: any = this.convertDate(date.toString());
     return (today > expire) ? true : false;
-  }
-
-  createCoupon(data: any) {
-    this.inProgress = true;
-    this._couponsServcice.createCoupon(data).subscribe((data: any) => {
-      if (data.status == "success") {
-        this.fetchCoupons();
-      }
-      this.alerts.status = data.status;
-      this.alerts.msg = data.msg;
-      this.inProgress = false;
-    }, (err: HttpErrorResponse) => {
-      this.inProgress = false;
-
-    })
   }
 }

@@ -16,34 +16,32 @@
                     <hr>
                     <span class="">{{ product?.name }}</span>
                     <span class="d-flex justify-content-start">
-                        <div class="d-flex text-primary my-2 display-4"><h4 class="me-2 fw-bold">Price: </h4>{{ product?.price }}<small class="me-2 fw-bold">/-</small></div>
-                        <h2 class="text-warning my-2"><s>xxxxxx</s></h2>
+                        <div class="d-flex text-primary my-2 display-4">&#8377; {{ product?.price }}<small class="me-2 fw-bold">/-</small></div>
+                        <h2 class="text-warning my-2"><s>&#8377; {{ product.price * 2 }}</s></h2>
                     </span>
+                    <span class="fw-bold form-text text-success my-2">50% Off</span>
                     <span class="fw-bold form-text text-secondary my-2">{{ product?.brandName }}</span>
-                    <span class="text-danger my-2" *ngIf="product.stock == 0">Out Of Stock!</span>
-                    <div class="input-group w-100 d-flex justify-content-center" *ngIf="product.stock != 0 && false">
-                        <button class="input-group-text bg-primary text-white border-primary" *ngIf="!inCart(product?.pid)" skiproute>
-                            <i class="bi bi-plus-circle pe-none"></i>
-                        </button>
-                        <input type="number" name="itemsCount" id="itemsCount_{{ product?.pid }}" max="{{ product?.stock }}" min="1" style="width: 2ch;" value="1" class="form-control" required *ngIf="!inCart(product?.pid)" skiproute>
-                        <button class="text-capitalize input-group-text btn btn-primary" *ngIf="!inCart(product?.pid)" (click)="modifyCart(product?.pid)" skiproute>
-                            into
-                            <i class="bi bi-cart pe-1 pe-none"></i>
-                        </button>
-                        <a class="input-group-text btn btn-primary" *ngIf="inCart(product?.pid)" href="dashboard/cart" skiproute> <!--  (click)="modifyCart(product?.pid)" -->
-                            <i class="bi bi-cart-plus pe-2"></i>
-                            Show In Cart
-                        </a>
-                        <button class="input-group-text btn btn-success" (click)="openCheckOupPage()" [disabled]="product.stock == 0" skiproute>
-                            <i class="bi bi-truck pe-1 pe-none"></i>
-                            Order
-                        </button>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn btn-success" (click)="openCheckOupPage()" [disabled]="product.stock == 0">
-                            <i class="bi bi-truck pe-2"></i>
-                            <span>Order Now</span>
-                        </button>
+                    <div class="text-center">
+                        <div class="input-group w-100">
+                            <button class="input-group-text bg-primary text-white border-primary" *ngIf="!inCart(product?.pid)">
+                                <i class="bi bi-plus-circle pe-none"></i>&nbsp;Add
+                            </button>
+                            <input type="number" name="itemsCount" id="itemsCount_{{ product?.pid }}" max="{{ product?.stock }}" min="1" value="1" class="form-control border-start-0" required *ngIf="!inCart(product?.pid)">
+                            <button class="text-capitalize input-group-text btn btn-primary" *ngIf="!inCart(product?.pid)" (click)="modifyCart(product?.pid)">
+                                Item(s) into
+                                <i class="bi bi-cart pe-1 pe-none"></i>
+                            </button>
+                            <a class="input-group-text btn btn-primary w-100" *ngIf="inCart(product?.pid)" href="dashboard/cart">
+                                <i class="bi bi-cart-plus pe-2"></i>
+                                Show In Cart
+                            </a>
+                        </div>
+                        <hr>
+                        <button class="btn btn-primary w-100" *ngIf="!inWishlist(product.pid)" (click)="modifyWishlist(product?.pid)">Add to Wishlist</button>
+                        <button class="btn btn-danger w-100" *ngIf="inWishlist(product.pid)" (click)="modifyWishlist(product?.pid)">Remove From Wishlist</button>
+                        <hr>
+                        <button class="btn btn-success w-100" (click)="orderPage(product?.pid)" [disabled]="product.stock == 0">Order Now</button>
+                        <span class="text-danger" *ngIf="product.stock == 0">Out Of Stock!</span>
                     </div>
                 </div>
             </div>

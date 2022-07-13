@@ -1,58 +1,58 @@
 <h2 class="text-center text-theme-secondary mb-0">Coupons & Offers</h2>
 <hr>
-<div class="" *ngIf="curUser.acctype == 'admin'">
-    <div class="d-flex justify-content-between align-items-center">
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#couponModal">
-            <i class="bi bi-gift pe-2"></i>
-            Create Coupon
-        </button>
-        <div class="">
-            <pagination-controls class="pagination" id="allCoupons" [maxSize]="5" [autoHide]="true"
-                [responsive]="true" previousLabel="" nextLabel="" (pageChange)="page = $event">
-            </pagination-controls>
+<ng-container *ngIf="curUser">
+    <div *ngIf="curUser.acctype == 'admin'">
+        <div class="d-flex justify-content-between align-items-center">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#couponModal">
+                <i class="bi bi-gift pe-2"></i>
+                Create Coupon
+            </button>
+            <div class="">
+                <pagination-controls class="pagination" id="allCoupons" [maxSize]="5" [autoHide]="true"
+                    [responsive]="true" previousLabel="" nextLabel="" (pageChange)="page = $event">
+                </pagination-controls>
+            </div>
         </div>
-    </div>
-    <hr>
-</div>
-<ng-container *ngIf="coupons && cpnUsers" [ngClass]="{'loading-effect': inProgress}" loading="Loading Coupons...">
-    <div class="conatiner-fluid">
-        <div class="alert alert-info text-center" *ngIf="coupons.length == 0">
-            <i class="bi bi-gift pe-2"></i>
-            No Coupons Found!
-        </div>
-        <table class="table table-stripped table-bordered table-hover mx-auto" *ngIf="coupons.length > 0">
-            <tbody>
-                <tr>
-                    <th>#</th>
-                    <th *ngIf="curUser.acctype == 'admin'">For</th>
-                    <th>Coupon Code</th>
-                    <th>Offer Price</th>
-                    <th>Valid Upto</th>
-                    <th>Validity</th>
-                </tr>
-            </tbody>
-            <tbody>
-                <tr *ngFor="let cpn of coupons | paginate: { itemsPerPage: perPage, currentPage: page, id: 'allCoupons' }; let i=index">
-                    <td>{{ i+1 }}</td>
-                    <td *ngIf="curUser.acctype == 'admin'">{{ cpnUsers[i].name+" ("+cpnUsers[i].acctype+")" }}</td>
-                    <td>{{ cpn.code }}</td>
-                    <td>&#8377; {{ cpn.offprice }} /-</td>
-                    <td>
-                        {{
-                        convertDate(cpn.expire).getDate()+"-"+convertDate(cpn.expire).getMonth()+"-"+convertDate(cpn.expire).getFullYear()
-                        }}
-                    </td>
-                    <td>
-                        <span class="text-danger" *ngIf="dateExpired(cpn.expire)">Coupon Expired</span>
-                        <span class="text-danger" *ngIf="cpn.validity == 0">Coupon Used</span>
-                        <span class="text-success" *ngIf="(!dateExpired(cpn.expire) && cpn.validity == 1)">Unused
-                            Coupon</span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <hr>
     </div>
 </ng-container>
+<div class="conatiner-fluid" [ngClass]="{'loading-effect': inProgress}" loading="Loading Coupons...">
+    <div class="alert alert-info text-center" *ngIf="coupons.length == 0">
+        <i class="bi bi-gift pe-2"></i>
+        No Coupons Found!
+    </div>
+    <table class="table table-stripped table-bordered table-hover mx-auto" *ngIf="coupons.length > 0">
+        <tbody>
+            <tr>
+                <th>#</th>
+                <th *ngIf="curUser.acctype == 'admin'">For</th>
+                <th>Coupon Code</th>
+                <th>Offer Price</th>
+                <th>Valid Upto</th>
+                <th>Validity</th>
+            </tr>
+        </tbody>
+        <tbody>
+            <tr *ngFor="let cpn of coupons | paginate: { itemsPerPage: perPage, currentPage: page, id: 'allCoupons' }; let i=index">
+                <td>{{ i+1 }}</td>
+                <td *ngIf="curUser.acctype == 'admin'">{{ cpn.user.name+" ("+cpn.user.acctype+")" }}</td>
+                <td>{{ cpn.code }}</td>
+                <td>&#8377; {{ cpn.offprice }} /-</td>
+                <td>
+                    {{
+                    convertDate(cpn.expire).getDate()+"-"+convertDate(cpn.expire).getMonth()+"-"+convertDate(cpn.expire).getFullYear()
+                    }}
+                </td>
+                <td>
+                    <span class="text-danger" *ngIf="dateExpired(cpn.expire)">Coupon Expired</span>
+                    <span class="text-danger" *ngIf="cpn.validity == 0">Coupon Used</span>
+                    <span class="text-success" *ngIf="(!dateExpired(cpn.expire) && cpn.validity == 1)">Unused
+                        Coupon</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 <div class="modal fade" id="couponModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -108,9 +108,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary"
-                        [disabled]="(inProgress || type.errors?.['required'] || price.errors?.['required'] || expireDays.errors?.['required'])">
-                        <span class="spinner spinner-border spinner-border-sm pe-2" *ngIf="inProgress"></span>
-                        <i class="bi bi-percent pe-2" *ngIf="!inProgress"></i>
+                        [disabled]="(createInProgress || type.errors?.['required'] || price.errors?.['required'] || expireDays.errors?.['required'])">
+                        <span class="spinner spinner-border spinner-border-sm pe-2" *ngIf="createInProgress"></span>
+                        <i class="bi bi-percent pe-2" *ngIf="!createInProgress"></i>
                         Create
                     </button>
                 </div>
