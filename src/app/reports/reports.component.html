@@ -1,25 +1,21 @@
 <h1 class="text-center text-theme-primary">Reports</h1>
 <hr>
-<div class="container-fluid" [ngClass]="{'loading-effect': inProgress}" loading="Loading Reoprts...">
-    <div class="alert alert-info text-center" *ngIf="reports.length == 0">
-        <i class="bi bi-info-circle pe-2"></i>
-        No Reports for now, No Orders are made so far.
-    </div>
-    <div class="" *ngIf="reports.length > 0">
+<div class="container-fluid">
+    <div class="">
         <div class="row">
-            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xsm-12">
+            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xsm-12 my-1">
                 <div class="d-flex align-items-center">
-                    <label for="start">Start :&nbsp;&nbsp;</label>
-                    <input type="date" name="start" id="start" class="form-control w-75" required [(ngModel)]="startDate">
+                    <label for="startDate">Start :&nbsp;&nbsp;</label>
+                    <input type="date" name="start" [max]="maxDate | date:'yyyy-MM-dd'" id="startDate" class="form-control w-75" required [(ngModel)]="startDate">
                 </div>
             </div>
-            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xsm-12">
+            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xsm-12 my-1">
                 <div class="d-flex align-items-center">
-                    <label for="end">End :&nbsp;&nbsp;</label>
-                    <input type="date" name="end" id="end" class="form-control w-75" required [(ngModel)]="endDate">
+                    <label for="endDate">End :&nbsp;&nbsp;</label>
+                    <input type="date" name="end" [min]="minDate | date:'yyyy-MM-dd'" id="endDate" class="form-control w-75" required [(ngModel)]="endDate">
                 </div>
             </div>
-            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xsm-12">
+            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xsm-12 my-1">
                 <button class="btn btn-primary" (click)="generateReports(startDate, endDate)">
                     <i class="bi bi-clock-history"></i>
                     get Reports
@@ -27,35 +23,43 @@
             </div>
         </div>
         <hr>
-        <table class="table table-stripper table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th >#</th>
-                    <th>Order Date</th>
-                    <th>User Email</th>
-                    <th>Product</th>
-                    <th>Coupon</th>
-                    <th>Actual Price</th>
-                    <th>Offer Price</th>
-                    <th>Order Price</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let rprt of reports | orderBy: sortBy : sortReverse | paginate: { itemsPerPage: perPage, currentPage: page, id: 'reports' }; let i = index">
-                    <td>{{ i+1 }}</td>
-                    <td>
-                        {{
-                            convertDate(rprt.date).getDate()+"-"+convertDate(rprt.date).getMonth()+"-"+convertDate(rprt.date).getFullYear()
-                        }}
-                    </td>
-                    <td>{{ rprt.user.email }}</td>
-                    <td>{{ rprt.product.name }}</td>
-                    <td>{{ rprt.coupon }}</td>
-                    <td>{{ rprt.actPrice }}</td>
-                    <td>{{ rprt.offerPrice }}</td>
-                    <td>{{ rprt.orderPrice }}</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="" [ngClass]="{'loading-effect': inProgress}" loading="Loading Reoprts...">
+            <div class="alert alert-info text-center" *ngIf="reports.length == 0">
+                <i class="bi bi-info-circle pe-2"></i>
+                No Reports Found.
+            </div>
+            <div class="table-responsive" *ngIf="reports.length > 0">
+                <table class="table table-stripper table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th >#</th>
+                            <th style="width: 11ch">Order Date</th>
+                            <th>User Email</th>
+                            <th>Product</th>
+                            <th>Coupon</th>
+                            <th>Actual Price</th>
+                            <th>Offer Price</th>
+                            <th>Order Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let rprt of reports | orderBy: sortBy : sortReverse | paginate: { itemsPerPage: perPage, currentPage: page, id: 'reports' }; let i = index">
+                            <td>{{ i+1 }}</td>
+                            <td>
+                                {{
+                                    convertDate(rprt.date).getDate()+"-"+convertDate(rprt.date).getMonth()+"-"+convertDate(rprt.date).getFullYear()
+                                }}
+                            </td>
+                            <td>{{ rprt.user.email }}</td>
+                            <td>{{ rprt.product.name }}</td>
+                            <td>{{ rprt.coupon }}</td>
+                            <td>{{ rprt.actPrice }}</td>
+                            <td>{{ rprt.offerPrice }}</td>
+                            <td>{{ rprt.orderPrice }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>

@@ -1,14 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AllBooksComponent } from './all-books/all-books.component';
 import { AllProductsComponent } from './all-products/all-products.component';
-import { BookdetailsComponent } from './bookdetails/bookdetails.component';
 import { CartComponent } from './cart/cart.component';
-import { CompletedComponent } from './completed/completed.component';
 import { CouponsComponent } from './coupons/coupons.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ManageproductsComponent } from './manageproducts/manageproducts.component';
-import { NotFoundComponent } from './not-found/not-found.component';
 import { OrdersComponent } from './orders/orders.component';
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 import { ParticipantsComponent } from './participants/participants.component';
@@ -50,8 +46,6 @@ const routes: Routes = [
         path: 'participants', component: ParticipantsComponent
       }, {
         path: 'wishlist', component: WishlistComponent
-      }, {
-        path: 'wishlist/:pageId', component: CompletedComponent
       }
     ]
   },
@@ -59,7 +53,6 @@ const routes: Routes = [
   { path: 'orders/:pid', component: OrdersComponent },
   { path: 'products', component: AllProductsComponent },
   { path: 'products/:pid', component: ProductDetailsComponent },
-  { path: '404', component: NotFoundComponent },
   {
     path: '**', pathMatch: 'full',
     component: PagenotfoundComponent
@@ -71,4 +64,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
-export const viewComponents = [AllBooksComponent, ReportsComponent, CouponsComponent, AllProductsComponent, OrdersComponent, CartComponent, ProductDetailsComponent, ManageproductsComponent, ParticipantsComponent, WishlistComponent, CompletedComponent, BookdetailsComponent, NotFoundComponent, DashboardComponent, PagenotfoundComponent];
+export const viewComponents = [ReportsComponent, CouponsComponent, AllProductsComponent, OrdersComponent, CartComponent, ProductDetailsComponent, ManageproductsComponent, ParticipantsComponent, WishlistComponent, DashboardComponent, PagenotfoundComponent];

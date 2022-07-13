@@ -4,12 +4,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule, viewComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AllBooksComponent } from './all-books/all-books.component';
 import { NavBarComponent } from './navbar/navbar.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginAndRegisterComponent } from './login-and-register/login-and-register.component';
 import { AuthenticationsService } from './Services/authentications.service';
-import { BookService } from './Services/books.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import {HttpClientModule} from '@angular/common/http';
 import { ProductsService } from './Services/products.service';
@@ -25,7 +23,6 @@ import { ReportsService } from './Services/reports.service';
 @NgModule({
   declarations: [
     AppComponent,
-    AllBooksComponent,
     NavBarComponent,
     LoginAndRegisterComponent,
     viewComponents
@@ -41,7 +38,7 @@ import { ReportsService } from './Services/reports.service';
     Ng2OrderModule,
     Ng2SearchPipeModule
   ],
-  providers: [AuthenticationsService, ReportsService, ProductsService, CouponService, UsersService, CartService, WishlistService, OrderService, BookService, Window],
+  providers: [AuthenticationsService, ReportsService, ProductsService, CouponService, UsersService, CartService, WishlistService, OrderService, Window],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,5 +1,4 @@
-import { Inject, Injectable, OnInit } from '@angular/core';
-import { Data } from '../Resources/data';
+import { Injectable } from '@angular/core';
 import { User } from '../Entities/user.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -7,16 +6,14 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthenticationsService extends Data {
+export class AuthenticationsService {
 
   private url: string = environment.masterServiceURL + '/authentications/';
 
   private static _curUser: User | undefined = undefined;
   private static _LoggedIn: boolean = false;
 
-  constructor(private http: HttpClient) {
-    super();
-  }
+  constructor(private http: HttpClient) { }
 
   async authenticateUser(creds: any) {
     let resp = new Promise((resolve, reject) => {
