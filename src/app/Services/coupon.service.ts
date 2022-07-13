@@ -13,6 +13,13 @@ export class CouponService {
 
   constructor(private http: HttpClient, private _authService: AuthenticationsService) { }
 
+  valideCoupon(coupon: string): Observable<any> {
+    let data: FormData = new FormData();
+    data.append("token", this._authService.getUserToken().token);
+    data.append("coupon", coupon);
+    return this.http.put<any>(`${this.url}/`, data);
+  }
+
   public getCoupons(): Observable<any> {
     return this.http.get<any>(`${this.url}/${this._authService.getUserToken().token}`);
   }

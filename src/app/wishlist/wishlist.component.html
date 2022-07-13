@@ -51,8 +51,9 @@
                 </div>
                 <div class="product-body p-2">
                     <p>
-                        <span class="fw-bold text-theme-secondary price">&#8377; {{ prdct?.price }} <small class="text-secondary"><s>&nbsp;xxxxx&nbsp;</s></small></span><br>
-                        <small class="text-savesoil-primary fw-bold">50% Off</small><br>
+                        <span class="fw-bold text-theme-secondary price">&#8377; {{ prdct?.price }} <small class="text-secondary"><s>&#8377;{{ prdct.price * 2 }}</s></small></span><br>
+                        <span class="form-text mb-3" [ngClass]="{'text-danger': prdct.stock <= 5, 'text-primary': prdct.stock > 5}" *ngIf="prdct.stock != 0">Only {{ prdct.stock }} Avaliable!</span><br>
+                        <small class="text-success fw-bold">50% Off</small><br>
                         <span><small class="text-muted fw-bold">{{ prdct?.brandName }}</small></span><br>
                         <span class="title">{{ truncate(prdct.name, 80) }}</span>
                     </p>

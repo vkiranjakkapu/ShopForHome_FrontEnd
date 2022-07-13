@@ -5,6 +5,7 @@ import { Coupon } from '../Entities/coupon.model';
 import { Product } from '../Entities/product.model';
 import { User } from '../Entities/user.model';
 import { AuthenticationsService } from '../Services/authentications.service';
+import { CouponService } from '../Services/coupon.service';
 import { OrderService } from '../Services/order.service';
 import { ProductsService } from '../Services/products.service';
 
@@ -32,6 +33,7 @@ export class OrdersComponent implements OnInit {
   public curUser!: User;
   public inProgress = false;
   public orderInProgress = false;
+  public cpnValidationInProgress = false;
   public proceedPurchase = true;
   private coupon!: Coupon;
 
@@ -40,7 +42,7 @@ export class OrdersComponent implements OnInit {
   public sortOrderReverse: boolean = true;
   public sortBy = "oid";
 
-  constructor(private _authService: AuthenticationsService, private _orderService: OrderService, private _activeRouter: ActivatedRoute, private router: Router, private _productsService: ProductsService) { }
+  constructor(private _authService: AuthenticationsService, private _couponService: CouponService, private _orderService: OrderService, private _activeRouter: ActivatedRoute, private router: Router, private _productsService: ProductsService) { }
 
   ngOnInit(): void {
     this._activeRouter.params.subscribe((pages: any) => { this.getPathVariables(pages) });
@@ -146,7 +148,8 @@ export class OrdersComponent implements OnInit {
   }
 
   validateCoupon(cpnCode: string) {
-    this._orderService.valideCoupon(cpnCode).subscribe(
+    this.cpnValidationInProgress = true;
+    this._couponService.valideCoupon(cpnCode).subscribe(
       (data: any) => {
         if (data.status == "success") {
           this.validCoupon = true;
@@ -159,10 +162,9 @@ export class OrdersComponent implements OnInit {
           this.evaluateFinalPrice();
         }
         this.couponVerified = true;
+        this.cpnValidationInProgress = false;
         this.validatePurchase();
-      }, (err: any) => {
-        console.log(err);
-      }
+      }, (err: any) => { this.cpnValidationInProgress = false }
     )
   }
 

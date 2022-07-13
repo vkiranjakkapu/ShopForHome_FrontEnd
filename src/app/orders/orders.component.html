@@ -42,9 +42,10 @@
                                 <input type="text" name="coupon" id="coupon" class="form-control"
                                     placeholder="Enter Coupon Code" (input)="evaluateFinalPrice()" (input)="validatePurchase()" [(ngModel)]="couponCode"
                                     required>
-                                <button class="btn btn-primary input-group-text" [disabled]="couponCode == ''"
+                                <button class="btn btn-primary input-group-text" [disabled]="(couponCode == '' || cpnValidationInProgress)"
                                     (click)="validateCoupon(couponCode)">
-                                    <i class="bi bi-check-circle pe-2"></i>
+                                    <i class="bi bi-check-circle pe-2" *ngIf="!cpnValidationInProgress"></i>
+                                    <span class="spinner spinner-grow spinner-grow-sm me-2" *ngIf="cpnValidationInProgress"></span>
                                     <span>Apply</span>
                                 </button>
                             </div>

@@ -20,7 +20,8 @@
                         <h2 class="text-warning my-2"><s>&#8377; {{ product.price * 2 }}</s></h2>
                     </span>
                     <span class="fw-bold form-text text-success my-2">50% Off</span>
-                    <span class="fw-bold form-text text-secondary my-2">{{ product?.brandName }}</span>
+                    <span class="fw-bold form-text text-secondary">{{ product?.brandName }}</span>
+                    <span class="form-text mb-3" [ngClass]="{'text-danger': product.stock <= 5, 'text-primary': product.stock > 5}" *ngIf="product.stock != 0">Only {{ product.stock }} Avaliable!</span>
                     <div class="text-center">
                         <div class="input-group w-100">
                             <button class="input-group-text bg-primary text-white border-primary" *ngIf="!inCart(product?.pid)">
