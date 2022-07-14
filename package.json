@@ -1,17 +1,12 @@
 {
-  "name": "shopforhomew8",
+  "name": "shopforhome",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "e2e:init": "npm run cypress:install && npm run cypress:verify && npm run cypress:open",
-    "e2e": "npm run cypress:verify && npm run cypress:open",
-    "cypress:install": "npm install cypress --save --legacy-peer-deps --force",
-    "cypress:verify": "npx cypress verify",
-    "cypress:open": "cypress open"
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {

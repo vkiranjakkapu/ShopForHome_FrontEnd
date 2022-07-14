@@ -17,7 +17,7 @@ export class ProductDetailsComponent implements OnInit {
   private pid!: number;
   public product!: Product;
   public inProgress: boolean = false;
-  private isLoggedIn: boolean = false;
+  public isLoggedIn: boolean = false;
 
   public wishlist: number[] = [];
   public cart: number[] = [];

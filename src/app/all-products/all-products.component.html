@@ -61,7 +61,7 @@
                 <div class="product" *ngFor="let prdct of productsList | orderBy: sortBy : sortReverse | paginate: { itemsPerPage: perPage, currentPage: page, id: 'allProducts' }" (click)="openProductDetails($event, prdct?.pid)">
                     <div class="product-header"><div class="img position-relative">
                             <img src="{{ prdct?.image }}" alt="{{ prdct?.image }}" class="w-100">
-                            <div class="wishlist btn-group btn-group-vertical d-flex align-items-center justify-content-center" [ngClass]="{'active' : inWishlist(prdct?.pid)}" *ngIf="isLoggedIn">
+                            <div class="wishlist btn-group btn-group-vertical d-flex align-items-center justify-content-center" [ngClass]="{'active' : inWishlist(prdct?.pid)}" *ngIf="isLoggedIn && prdct.stock != 0">
                                 <button class="btn btn-sm d-flex align-items-center justify-content-center" (click)="modifyWishlist(prdct?.pid)" skiproute>
                                     <i title="Add to Wishlist" class="bi bi-heart" [ngClass]="{'d-none' : inWishlist(prdct?.pid)}"></i>
                                     <i title="Remove from Wishlist" class="bi bi-heart-fill" [ngClass]="{'d-none' : !inWishlist(prdct?.pid)}"></i>
@@ -73,6 +73,7 @@
                         <p>
                             <span class="fw-bold text-theme-secondary price">&#8377; {{ prdct?.price }} <small class="text-secondary"><s>&nbsp;{{ (prdct?.price)*2 }}&nbsp;</s></small></span><br>
                             <small class="text-success fw-bold">50% Off</small><br>
+                            <small class="fw-bold" [ngClass]="{'text-primary': prdct.stock > 5, 'text-danger': prdct.stock <= 5}">Only {{ prdct.stock }} Available</small><br>
                             <span><small class="text-muted fw-bold">{{ prdct?.brandName }}</small></span><br>
                             <span><small class="text-muted fw-bold">{{ prdct?.category }}</small></span><br>
                             <span class="title">

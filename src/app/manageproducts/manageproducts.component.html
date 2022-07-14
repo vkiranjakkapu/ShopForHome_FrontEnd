@@ -86,6 +86,7 @@
                             <span class="fw-bold text-theme-secondary price">&#8377; {{ prdct?.price }} <small
                                     class="text-secondary"><s>{{ (prdct.price)*2 }}</s></small></span><br>
                             <small class="text-success fw-bold">50% Off</small><br>
+                            <small class="fw-bold" [ngClass]="{'text-primary': prdct.stock > 5, 'text-danger': prdct.stock <= 5}">Only {{ prdct.stock }} Available</small><br>
                             <span><small class="text-muted fw-bold">{{ prdct?.brandName }}</small></span><br>
                             <span class="title">{{ truncate(prdct?.name, 80) }}</span>
                         </p>

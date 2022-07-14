@@ -22,7 +22,11 @@
                     <span class="fw-bold form-text text-success my-2">50% Off</span>
                     <span class="fw-bold form-text text-secondary">{{ product?.brandName }}</span>
                     <span class="form-text mb-3" [ngClass]="{'text-danger': product.stock <= 5, 'text-primary': product.stock > 5}" *ngIf="product.stock != 0">Only {{ product.stock }} Avaliable!</span>
-                    <div class="text-center">
+                    <div class="alert alert-primary" *ngIf="!isLoggedIn">
+                        <i class="bi bi-info-circle pe-1"></i>
+                        Login to get Cart, Wishlist and Order Options.
+                    </div>
+                    <div class="text-center" *ngIf="isLoggedIn">
                         <div class="input-group w-100">
                             <button class="input-group-text bg-primary text-white border-primary" *ngIf="!inCart(product?.pid)">
                                 <i class="bi bi-plus-circle pe-none"></i>&nbsp;Add

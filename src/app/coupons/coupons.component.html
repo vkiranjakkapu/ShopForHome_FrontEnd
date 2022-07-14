@@ -17,41 +17,43 @@
     </div>
 </ng-container>
 <div class="conatiner-fluid" [ngClass]="{'loading-effect': inProgress}" loading="Loading Coupons...">
-    <div class="alert alert-info text-center" *ngIf="coupons.length == 0">
-        <i class="bi bi-gift pe-2"></i>
-        No Coupons Found!
-    </div>
-    <table class="table table-stripped table-bordered table-hover mx-auto" *ngIf="coupons.length > 0">
-        <tbody>
-            <tr>
-                <th>#</th>
-                <th *ngIf="curUser.acctype == 'admin'">For</th>
-                <th>Coupon Code</th>
-                <th>Offer Price</th>
-                <th>Valid Upto</th>
-                <th>Validity</th>
-            </tr>
-        </tbody>
-        <tbody>
-            <tr *ngFor="let cpn of coupons | paginate: { itemsPerPage: perPage, currentPage: page, id: 'allCoupons' }; let i=index">
-                <td>{{ i+1 }}</td>
-                <td *ngIf="curUser.acctype == 'admin'">{{ cpn.user.name+" ("+cpn.user.acctype+")" }}</td>
-                <td>{{ cpn.code }}</td>
-                <td>&#8377; {{ cpn.offprice }} /-</td>
-                <td>
-                    {{
-                    convertDate(cpn.expire).getDate()+"-"+convertDate(cpn.expire).getMonth()+"-"+convertDate(cpn.expire).getFullYear()
-                    }}
-                </td>
-                <td>
-                    <span class="text-danger" *ngIf="dateExpired(cpn.expire)">Coupon Expired</span>
-                    <span class="text-danger" *ngIf="cpn.validity == 0">Coupon Used</span>
-                    <span class="text-success" *ngIf="(!dateExpired(cpn.expire) && cpn.validity == 1)">Unused
-                        Coupon</span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <ng-container *ngIf="coupons">
+        <div class="alert alert-info text-center" *ngIf="coupons.length == 0">
+            <i class="bi bi-gift pe-2"></i>
+            No Coupons Found!
+        </div>
+        <table class="table table-stripped table-bordered table-hover mx-auto" *ngIf="coupons.length > 0">
+            <tbody>
+                <tr>
+                    <th>#</th>
+                    <th *ngIf="curUser.acctype == 'admin'">For</th>
+                    <th>Coupon Code</th>
+                    <th>Offer Price</th>
+                    <th>Valid Upto</th>
+                    <th>Validity</th>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr *ngFor="let cpn of coupons | paginate: { itemsPerPage: perPage, currentPage: page, id: 'allCoupons' }; let i=index">
+                    <td>{{ i+1 }}</td>
+                    <td *ngIf="curUser.acctype == 'admin'">{{ cpn.user.name+" ("+cpn.user.acctype+")" }}</td>
+                    <td>{{ cpn.code }}</td>
+                    <td>&#8377; {{ cpn.offprice }} /-</td>
+                    <td>
+                        {{
+                        convertDate(cpn.expire).getDate()+"-"+convertDate(cpn.expire).getMonth()+"-"+convertDate(cpn.expire).getFullYear()
+                        }}
+                    </td>
+                    <td>
+                        <span class="text-danger" *ngIf="dateExpired(cpn.expire)">Coupon Expired</span>
+                        <span class="text-danger" *ngIf="cpn.validity == 0">Coupon Used</span>
+                        <span class="text-success" *ngIf="(!dateExpired(cpn.expire) && cpn.validity == 1)">Unused
+                            Coupon</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </ng-container>
 </div>
 <div class="modal fade" id="couponModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
