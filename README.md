@@ -4,7 +4,7 @@
 Backend [Microservices - Springboot](https://github.com/vkiranjakkapu/ShopForHome)
 
 ShopForHome is a online Shopping application for home decoration items.
-ShopForHome Application was developed using Microservices Architecture, and designed using Angular 12 Framework. In this repository you will find the Front-End which is developed using Angualr.
+ShopForHome Application was developed using Microservices Architecture, and designed using Angular 12 Framework. In this repository you will find the Front-End which is developed using Angular.
 
 #### Microservices for ShopForHome:
 - Master Service
